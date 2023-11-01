@@ -10,7 +10,7 @@ using OpenQA.Selenium.Support.UI;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class CroupCreationTests
+    public class GroupCreationTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
@@ -47,9 +47,12 @@ namespace WebAddressbookTests
             GoToGroupsPage();
             InitGroupCreation();
 
-            GroupData group = new GroupData("bbb");
-            group.Header = "bbb header";
-            group.Footer = "bbb footer";
+            GroupData group = new GroupData("bbb")
+            {
+                Header = "bbb header",
+                Footer = "bbb footer"
+            };
+            
             FillGroupForm(group);
             SubmitGroupCreation();
 
