@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebAddressbookTests
+﻿namespace WebAddressbookTests
 {
-    class ContactData
+    public class ContactData
     {
         private string first_name;
         private string last_name;
