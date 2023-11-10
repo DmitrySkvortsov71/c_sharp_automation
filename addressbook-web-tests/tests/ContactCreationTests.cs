@@ -9,21 +9,12 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
-            OpenHomePage();
-            Login(new AccountData("admin", "secret"));
-
-            InitContactCreation();
-
             ContactData contact = new ContactData("werty", "qwerty", "werty.qwert@gmail.com")
             {
                 MobilePhone = "+711111111",
                 MainAddress = "kjhdsfkhjskdhjf"
             };
-            FillContactForm(contact);
-            SubmitContactCreation();
-
-            OpenHomePage();
-            Logout();
+            app.Contacts.Create(contact);
         }
     }
 }

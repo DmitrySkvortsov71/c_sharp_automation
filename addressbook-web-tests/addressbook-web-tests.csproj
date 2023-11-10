@@ -43,15 +43,20 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountData.cs" />
-    <Compile Include="TestBase.cs" />
-    <Compile Include="ContactData.cs" />
-    <Compile Include="GroupData.cs" />
-    <Compile Include="GroupRemovalTest.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="appmanager\ApplicationManager.cs" />
+    <Compile Include="appmanager\ContactHelper.cs" />
+    <Compile Include="appmanager\GroupHelper.cs" />
+    <Compile Include="appmanager\HelperBase.cs" />
+    <Compile Include="appmanager\LoginHelper.cs" />
+    <Compile Include="appmanager\NavigationHelper.cs" />
+    <Compile Include="model\AccountData.cs" />
+    <Compile Include="model\ContactData.cs" />
+    <Compile Include="model\GroupData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GroupCreationTests.cs" />
-    <Compile Include="ContactCreationTests.cs" />
+    <Compile Include="tests\ContactCreationTests.cs" />
+    <Compile Include="tests\GroupCreationTests.cs" />
+    <Compile Include="tests\GroupRemovalTest.cs" />
+    <Compile Include="tests\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />

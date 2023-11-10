@@ -9,23 +9,25 @@ namespace WebAddressbookTests
         [Test]
         public void GroupCreationTest()
         {
-            OpenHomePage();
-            Login(new AccountData("admin", "secret"));
-            GoToGroupsPage();
-            InitGroupCreation();
-
             var group = new GroupData("bbb")
             {
                 Header = "bbb header",
                 Footer = "bbb footer"
             };
-            
-            FillGroupForm(group);
-            SubmitGroupCreation();
+            app.Groups.Create(group);
+       } 
+        
+        public void EmptyGroupCreationTest()
+        {
+            var group = new GroupData("")
+            {
+                Header = "",
+                Footer = ""
+            };
+            app.Groups.Create(group);
 
-            GoToGroupsPage();
-            Logout();
-        }
+            app.Navigator.GoToGroupsPage();
+        } 
 
     }
 }
