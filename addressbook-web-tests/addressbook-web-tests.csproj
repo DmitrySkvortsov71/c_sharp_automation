@@ -54,8 +54,11 @@
     <Compile Include="model\GroupData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tests\ContactCreationTests.cs" />
+    <Compile Include="tests\ContactModificationTests.cs" />
+    <Compile Include="tests\ContactRemovalTests.cs" />
     <Compile Include="tests\GroupCreationTests.cs" />
-    <Compile Include="tests\GroupRemovalTest.cs" />
+    <Compile Include="tests\GroupModificationTests.cs" />
+    <Compile Include="tests\GroupRemovalTests.cs" />
     <Compile Include="tests\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
