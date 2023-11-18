@@ -3,7 +3,7 @@
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroupCreationTests: TestBase
+    public class GroupCreationTests: AuthTestBase
     {
         
         [Test]
@@ -15,7 +15,8 @@ namespace WebAddressbookTests
                 Footer = "bbb footer"
             };
             app.Groups.Create(group);
-       } 
+            app.Auth.Logout();
+        } 
         
         public void EmptyGroupCreationTest()
         {
@@ -28,6 +29,5 @@ namespace WebAddressbookTests
 
             app.Navigator.GoToGroupsPage();
         } 
-
     }
 }

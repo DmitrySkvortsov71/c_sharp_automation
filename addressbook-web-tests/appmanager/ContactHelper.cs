@@ -10,38 +10,52 @@ namespace WebAddressbookTests
 
         public ContactHelper Create(ContactData contact)
         {
-            InitContactCreation(); 
+            InitContactCreation();
             FillContactForm(contact);
             SubmitContactCreation();
+
+            manager.Navigator.ReturnToHomePage();
             return this;
         }
 
         public ContactHelper Modify(int index, ContactData newContactData)
         {
             manager.Navigator.OpenHomePage();
+
+            if (GetContactsQuantityOnPage() == 0) Create(new ContactData("", "", ""));
+
             InitContactModification(index);
             FillContactForm(newContactData);
             SubmitContactModification();
-            
-            manager.Navigator.OpenHomePage();
+
+            manager.Navigator.ReturnToHomePage();
             return this;
         }
 
         public ContactHelper Remove(int index)
         {
             manager.Navigator.OpenHomePage();
+
+            var contacts = GetContactsQuantityOnPage();
+            if (GetContactsQuantityOnPage() == 0) Create(new ContactData("", "", ""));
+
             SelectContact(index);
             SubmitContactDeletion();
-            
             manager.Navigator.OpenHomePage();
             return this;
+        }
+
+        public int GetContactsQuantityOnPage()
+        {
+            // -1 for "Select All" (it always present on Page)
+            return driver.FindElements(By.CssSelector("input[id]")).Count - 1;
         }
 
         public ContactHelper SubmitContactDeletion()
         {
             driver.FindElement(By.CssSelector("input[value='Delete']")).Click();
             driver.SwitchTo().Alert().Accept();
-            
+
             return this;
         }
 
@@ -56,19 +70,19 @@ namespace WebAddressbookTests
             driver.FindElements(By.CssSelector("a[href^='edit.php?id=']"))[index - 1].Click();
             return this;
         }
-        
+
         public ContactHelper SubmitContactModification()
         {
             driver.FindElement(By.Name("update")).Click();
             return this;
         }
-        
+
         public ContactHelper InitContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
             return this;
         }
-        
+
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.CssSelector("input[name='submit']")).Click();
@@ -78,46 +92,19 @@ namespace WebAddressbookTests
         public ContactHelper FillContactForm(ContactData contact)
         {
             // mandatory parameters
-            driver.FindElement(By.Name("firstname")).Click();
-            driver.FindElement(By.Name("firstname")).Clear();
-            driver.FindElement(By.Name("firstname")).SendKeys(contact.FirstName);
-            driver.FindElement(By.Name("lastname")).Click();
-            driver.FindElement(By.Name("lastname")).Clear();
-            driver.FindElement(By.Name("lastname")).SendKeys(contact.LastName);
-            driver.FindElement(By.Name("email")).Click();
-            driver.FindElement(By.Name("email")).Clear();
-            driver.FindElement(By.Name("email")).SendKeys(contact.EMail);
+            Type(By.Name("firstname"), contact.FirstName);
+            Type(By.Name("lastname"), contact.LastName);
+            Type(By.Name("email"), contact.EMail);
 
             // additional parameters
-            if (contact.MainAddress != "")
-            {
-                driver.FindElement(By.Name("address")).Click();
-                driver.FindElement(By.Name("address")).Clear();
-                driver.FindElement(By.Name("address")).SendKeys(contact.MainAddress);
-            }
+            if (contact.MainAddress != "") Type(By.Name("address"), contact.MainAddress);
 
-            if (contact.MobilePhone != "")
-            {
-                driver.FindElement(By.Name("mobile")).Click();
-                driver.FindElement(By.Name("mobile")).Clear();
-                driver.FindElement(By.Name("mobile")).SendKeys(contact.MobilePhone);
-            }
-            
-            if (contact.WorkPhone != "")
-            {
-                driver.FindElement(By.Name("work")).Click();
-                driver.FindElement(By.Name("work")).Clear();
-                driver.FindElement(By.Name("work")).SendKeys(contact.WorkPhone);
-            }
-            
-            if (contact.SecondAddress != "")
-            {
-                driver.FindElement(By.Name("address2")).Click();
-                driver.FindElement(By.Name("address2")).Clear();
-                driver.FindElement(By.Name("address2")).SendKeys(contact.SecondAddress);
-            }
+            if (contact.MobilePhone != "") Type(By.Name("mobile"), contact.MobilePhone);
+
+            if (contact.WorkPhone != "") Type(By.Name("work"), contact.WorkPhone);
+
+            if (contact.SecondAddress != "") Type(By.Name("address2"), contact.SecondAddress);
             return this;
         }
-        
     }
 }
