@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using System.Collections.Generic;
+using OpenQA.Selenium;
 
 namespace WebAddressbookTests
 {
@@ -38,7 +39,8 @@ namespace WebAddressbookTests
 
             SelectContact(index);
             SubmitContactDeletion();
-            manager.Navigator.OpenHomePage();
+            
+            manager.Navigator.OpenHomePage(true);
             return this;
         }
 
@@ -60,13 +62,13 @@ namespace WebAddressbookTests
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElements(By.CssSelector("input[id]"))[index - 1].Click();
+            driver.FindElements(By.CssSelector("input[id]"))[index].Click();
             return this;
         }
 
         public ContactHelper InitContactModification(int index)
         {
-            driver.FindElements(By.CssSelector("a[href^='edit.php?id=']"))[index - 1].Click();
+            driver.FindElements(By.CssSelector("a[href^='edit.php?id=']"))[index].Click();
             return this;
         }
 
@@ -97,13 +99,30 @@ namespace WebAddressbookTests
 
             // additional parameters
             if (contact.MainAddress != "") Type(By.Name("address"), contact.MainAddress);
-
             if (contact.MobilePhone != "") Type(By.Name("mobile"), contact.MobilePhone);
-
             if (contact.WorkPhone != "") Type(By.Name("work"), contact.WorkPhone);
-
             if (contact.SecondAddress != "") Type(By.Name("address2"), contact.SecondAddress);
+            
             return this;
+        }
+
+        public List<ContactData> GetContactsList()
+        {
+            manager.Navigator.OpenHomePage();
+            
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("[name='entry']"));
+
+            List<ContactData> contacts = new List<ContactData>();
+            foreach (var element in elements)
+            { 
+                var fields = element.FindElements(By.TagName("td"));
+                
+                // 1 - last name, 2 - first name, 3 - address, 4 - e-mail
+                contacts.Add(new ContactData(
+                    fields[2].Text, fields[1].Text, fields[4].Text)); 
+            }
+            
+            return contacts;
         }
     }
 }

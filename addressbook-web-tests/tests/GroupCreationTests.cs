@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace WebAddressbookTests
 {
@@ -9,25 +10,32 @@ namespace WebAddressbookTests
         [Test]
         public void GroupCreationTest()
         {
+            List<GroupData> oldGroups = app.Groups.GetGroupsList();
+            
             var group = new GroupData("bbb")
             {
                 Header = "bbb header",
                 Footer = "bbb footer"
             };
             app.Groups.Create(group);
-            app.Auth.Logout();
+            
+            List<GroupData> newGroups = app.Groups.GetGroupsList();
+            Assert.AreEqual(oldGroups.Count + 1, newGroups.Count);
+            
         } 
         
+        [Test]
         public void EmptyGroupCreationTest()
         {
+
             var group = new GroupData("")
             {
                 Header = "",
                 Footer = ""
             };
             app.Groups.Create(group);
-
-            app.Navigator.GoToGroupsPage();
+            
+            
         } 
     }
 }

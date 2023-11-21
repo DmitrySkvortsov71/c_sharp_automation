@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenQA.Selenium;
 
 namespace WebAddressbookTests
@@ -45,7 +46,8 @@ namespace WebAddressbookTests
 
             return this;
         }
-
+        
+        
         public int GetGroupsQuantityOnPage()
         {
             manager.Navigator.GoToGroupsPage();
@@ -73,7 +75,7 @@ namespace WebAddressbookTests
         public GroupHelper SelectGroup(int index)
         {
             var groups = driver.FindElements(By.CssSelector("span.group input[type='checkbox']"));
-            groups[index - 1].Click();
+            groups[index].Click();
             return this;
         }
 
@@ -96,6 +98,19 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.Name("new")).Click();
             return this;
+        }
+
+        public List<GroupData> GetGroupsList()
+        {
+
+            manager.Navigator.GoToGroupsPage();
+            
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            
+            List<GroupData> groups = new List<GroupData>();
+            foreach (var element in elements) groups.Add(new GroupData(element.Text));
+            
+            return groups;
         }
     }
 }

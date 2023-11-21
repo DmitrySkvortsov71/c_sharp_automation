@@ -11,12 +11,10 @@ namespace WebAddressbookTests
             this.baseUrl = baseUrl;
         }
 
-        public NavigationHelper OpenHomePage()
+        public NavigationHelper OpenHomePage(bool refresh = false)
         {
-            if (driver.Url != baseUrl + "addressbook/")
-            {
-                driver.Navigate().GoToUrl(baseUrl + "addressbook/");
-            }
+            if (driver.Url != baseUrl + "addressbook/" | refresh) driver.Navigate().GoToUrl(baseUrl + "addressbook/");
+            
             return this;
         }
 

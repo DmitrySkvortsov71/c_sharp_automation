@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace WebAddressbookTests
 {
@@ -9,12 +10,15 @@ namespace WebAddressbookTests
         [Test]
         public void ContactCreationTest()
         {
+            
             ContactData contact = new ContactData("werty", "qwerty", "werty.qwert@gmail.com")
             {
                 MobilePhone = "+711111111",
                 MainAddress = "kjhdsfkhjskdhjf"
             };
+            
             app.Contacts.Create(contact);
+            
         }
     }
 }

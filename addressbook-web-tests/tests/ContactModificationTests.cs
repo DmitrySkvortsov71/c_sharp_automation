@@ -17,7 +17,7 @@ namespace WebAddressbookTests
                 MobilePhone = "+5555",
                 MainAddress = "updated mail address"
             };
-            app.Contacts.Modify(1, newContactDataData);
+            app.Contacts.Modify(0, newContactDataData);
         }
     }
 }
