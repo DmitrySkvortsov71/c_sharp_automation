@@ -6,7 +6,6 @@ namespace WebAddressbookTests
     [TestFixture]
     public class GroupCreationTests: AuthTestBase
     {
-        
         [Test]
         public void GroupCreationTest()
         {
@@ -19,15 +18,20 @@ namespace WebAddressbookTests
             };
             app.Groups.Create(group);
             
+            // verification
             List<GroupData> newGroups = app.Groups.GetGroupsList();
-            Assert.AreEqual(oldGroups.Count + 1, newGroups.Count);
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.AreEqual(oldGroups, newGroups);
             
-        } 
-        
+        }
+
         [Test]
         public void EmptyGroupCreationTest()
         {
-
+            List<GroupData> oldGroups = app.Groups.GetGroupsList();
+            
             var group = new GroupData("")
             {
                 Header = "",
@@ -35,7 +39,14 @@ namespace WebAddressbookTests
             };
             app.Groups.Create(group);
             
+            // verification
+            List<GroupData> newGroups = app.Groups.GetGroupsList();
             
-        } 
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+            
+            Assert.AreEqual(oldGroups, newGroups);
+        }
     }
 }

@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WebAddressbookTests
 {
-    public class ContactData : IEquatable<ContactData>
+    public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
+        private string e_mail;
         private string first_name;
         private string last_name;
-        private string e_mail;
-        private string mobile_phone = "";
-        private string work_phone = "";
         private string main_address = "";
+        private string mobile_phone = "";
         private string second_address = "";
+        private string work_phone = "";
 
         public ContactData(string first_name, string last_name, string e_mail)
         {
@@ -69,6 +70,17 @@ namespace WebAddressbookTests
             if (FirstName == other.FirstName && LastName == other.LastName) return true;
             else
                 return false;
+        }
+
+        public int CompareTo(ContactData other)
+        {
+            if (Object.ReferenceEquals(other, null)) return 1;
+            return LastName.CompareTo(other.LastName);
+        }
+
+        public override string ToString()
+        {
+            return "Last Name = " + LastName;
         }
     }
 }
