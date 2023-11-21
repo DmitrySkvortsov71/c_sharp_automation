@@ -25,7 +25,6 @@ namespace WebAddressbookTests
         public GroupHelper Modify(int index, GroupData newData)
         {
             manager.Navigator.GoToGroupsPage();
-            if (GetGroupsQuantityOnPage() == 0) Create(new GroupData(""));
 
             SelectGroup(index);
             InitGroupModification();
@@ -40,8 +39,6 @@ namespace WebAddressbookTests
         public GroupHelper Remove(int index)
         {
             manager.Navigator.GoToGroupsPage();
-
-            if (GetGroupsQuantityOnPage() == 0) Create(new GroupData(""));
             
             SelectGroup(index);
             RemoveGroup();
@@ -51,6 +48,7 @@ namespace WebAddressbookTests
 
         public int GetGroupsQuantityOnPage()
         {
+            manager.Navigator.GoToGroupsPage();
             return driver.FindElements(By.CssSelector("span.group [type='checkbox']")).Count;
         }
 

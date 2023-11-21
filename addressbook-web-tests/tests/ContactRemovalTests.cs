@@ -9,6 +9,9 @@ namespace WebAddressbookTests
         [Test]
         public void ContactRemovalTest()
         {
+            if (app.Contacts.GetContactsQuantityOnPage() == 0)
+                app.Contacts.Create(new ContactData("", "", ""));
+            
             app.Contacts.Remove(1);
         }
     }

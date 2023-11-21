@@ -9,6 +9,9 @@ namespace WebAddressbookTests
         [Test]
         public void GroupModificationTest()
         {
+            if (app.Groups.GetGroupsQuantityOnPage() == 0) 
+                app.Groups.Create(new GroupData(""));
+            
             var newData = new GroupData("modified")
             {
                 Header = null,

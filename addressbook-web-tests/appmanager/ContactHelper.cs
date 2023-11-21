@@ -36,9 +36,6 @@ namespace WebAddressbookTests
         {
             manager.Navigator.OpenHomePage();
 
-            var contacts = GetContactsQuantityOnPage();
-            if (GetContactsQuantityOnPage() == 0) Create(new ContactData("", "", ""));
-
             SelectContact(index);
             SubmitContactDeletion();
             manager.Navigator.OpenHomePage();
@@ -47,6 +44,8 @@ namespace WebAddressbookTests
 
         public int GetContactsQuantityOnPage()
         {
+            manager.Navigator.OpenHomePage();
+            
             // -1 for "Select All" (it always present on Page)
             return driver.FindElements(By.CssSelector("input[id]")).Count - 1;
         }
