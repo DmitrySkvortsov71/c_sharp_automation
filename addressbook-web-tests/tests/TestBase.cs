@@ -2,14 +2,14 @@
 
 namespace WebAddressbookTests
 {
-    public class TestBase
-    {
-        public ApplicationManager app;
+  public class TestBase
+  {
+    public ApplicationManager app;
 
-        [SetUp]
-        public void SetupApplicationManager()
-        {
-            app = ApplicationManager.GetInstance();
-        }
+    [SetUp]
+    public void SetupApplicationManager()
+    {
+      app = ApplicationManager.GetInstance();
     }
+  }
 }
