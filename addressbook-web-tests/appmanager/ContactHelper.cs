@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 
 namespace WebAddressbookTests
@@ -132,6 +133,57 @@ namespace WebAddressbookTests
       }
 
       return new List<ContactData>(contactsCache);
+    }
+
+    public ContactData GetContactInformationFromTable(int index)
+    {
+      manager.Navigator.OpenHomePage(true);
+
+      var cells = driver.FindElements(By.Name("entry"))[index]
+          .FindElements(By.TagName("td"));
+
+      var lastName = cells[1].Text;
+      var firstName = cells[2].Text;
+      var address = cells[3].Text;
+      var allPhones = cells[5].Text;
+
+      return new ContactData(firstName, lastName, "")
+      {
+          MainAddress = address,
+          AllPhones = allPhones
+      };
+    }
+
+    public ContactData GetContactInformationFromEditForm(int index)
+    {
+      manager.Navigator.OpenHomePage(true);
+
+      InitContactModification(index);
+
+      var firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+      var lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+      var address = driver.FindElement(By.Name("address")).GetAttribute("value");
+      var homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+      var mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+      var workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+
+      return new ContactData(firstName, lastName, "")
+      {
+          MainAddress = address,
+          MobilePhone = mobilePhone,
+          WorkPhone = workPhone,
+          HomePhone = homePhone
+      };
+    }
+
+    public int GetNumberOfSearchResults()
+    {
+      manager.Navigator.OpenHomePage();
+
+      var text = driver.FindElement(By.TagName("label")).Text;
+      var m = new Regex(@"\d+").Match(text);
+
+      return int.Parse(m.Value);
     }
   }
 }

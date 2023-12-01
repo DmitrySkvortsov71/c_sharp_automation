@@ -30,7 +30,7 @@ namespace WebAddressbookTests
       // comment hash ..., if you don't need it. 
       // if (GetHashCode() != other.GetHashCode()) return false;
 
-      return Name == other.Name;
+      return Name.Equals(other.Name, StringComparison.Ordinal);
     }
 
     public int CompareTo(GroupData other)

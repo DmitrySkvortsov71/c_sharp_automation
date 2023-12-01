@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace WebAddressbookTests
 {
@@ -12,7 +11,7 @@ namespace WebAddressbookTests
       // preparation
       if (app.Groups.GetGroupsCount() == 0)
         app.Groups.Create(new GroupData(""));
-      
+
       var oldGroups = app.Groups.GetGroupsList();
       var groupToRemove = oldGroups[0];
 

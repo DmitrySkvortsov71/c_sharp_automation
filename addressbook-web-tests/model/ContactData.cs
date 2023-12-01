@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace WebAddressbookTests
 {
@@ -12,6 +12,7 @@ namespace WebAddressbookTests
     private string mobile_phone = "";
     private string second_address = "";
     private string work_phone = "";
+    private string all_phones;
 
     public ContactData(string first_name, string last_name, string e_mail)
     {
@@ -37,6 +38,31 @@ namespace WebAddressbookTests
       get => e_mail;
       set => e_mail = value;
     }
+
+    // all phones by one record
+    public string AllPhones
+    {
+      set => all_phones = value;
+      get
+      {
+        if (all_phones != null)
+          return all_phones;
+        else
+          return (PhoneFieldCleanUp(HomePhone) + PhoneFieldCleanUp(MobilePhone)
+                                               + PhoneFieldCleanUp(WorkPhone)).Trim();
+      }
+    }
+
+    private string PhoneFieldCleanUp(string phoneField)
+    {
+      if (string.IsNullOrEmpty(phoneField))
+        return "";
+      else
+          // return phoneField.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+        return Regex.Replace(phoneField, "[ -()]", "") + "\r\n";
+    }
+
+    public string HomePhone { set; get; }
 
     public string MobilePhone
     {

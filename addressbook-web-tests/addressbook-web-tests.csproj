@@ -55,6 +55,7 @@
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="tests\AuthTestBase.cs"/>
         <Compile Include="tests\ContactCreationTests.cs"/>
+        <Compile Include="tests\ContactInformationTest.cs"/>
         <Compile Include="tests\ContactModificationTests.cs"/>
         <Compile Include="tests\ContactRemovalTests.cs"/>
         <Compile Include="tests\GroupCreationTests.cs"/>

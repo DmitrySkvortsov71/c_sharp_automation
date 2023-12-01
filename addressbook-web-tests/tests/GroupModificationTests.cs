@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace WebAddressbookTests
 {
@@ -18,9 +17,9 @@ namespace WebAddressbookTests
       {
           Id = oldGroups[0].Id,
           Header = oldGroups[0].Header,
-          Footer = oldGroups[0].Footer,
+          Footer = oldGroups[0].Footer
       };
-      
+
       // action
       var newData = new GroupData("modified")
       {
@@ -40,12 +39,8 @@ namespace WebAddressbookTests
 
       Assert.AreEqual(oldGroups, newGroups);
       foreach (var group in newGroups)
-      {
         if (group.Id == groupToModify.Id)
-        {
           Assert.AreNotEqual(groupToModify.Name, group.Name);
-        }
-      }
     }
   }
 }
