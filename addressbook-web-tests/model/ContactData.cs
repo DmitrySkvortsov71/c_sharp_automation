@@ -49,8 +49,24 @@ namespace WebAddressbookTests
         if (detailedInformation != null)
           return detailedInformation;
         else
-          return $"{FirstName} {LastName}\r\n{MainAddress}\r\n" +
-                 $"\r\nM: {AllPhones}\r\n\r\n{EMail}";
+        {
+          detailedInformation = "";
+          
+          if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+            detailedInformation += $"{FirstName} {LastName}";
+          else
+          {
+            if (!string.IsNullOrWhiteSpace(FirstName)) detailedInformation += FirstName;
+            if (!string.IsNullOrWhiteSpace(LastName)) detailedInformation += LastName;
+          }
+            
+            
+          if (!string.IsNullOrWhiteSpace(MainAddress)) detailedInformation += $"\r\n{MainAddress}";
+          if (!string.IsNullOrWhiteSpace(AllPhones)) detailedInformation += $"\r\n\r\nM: {AllPhones}";
+          if (!string.IsNullOrWhiteSpace(EMail)) detailedInformation += $"\r\n\r\n{EMail}";
+
+          return detailedInformation;
+        }
       }
     }
 
