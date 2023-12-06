@@ -13,6 +13,7 @@ namespace WebAddressbookTests
     private string second_address = "";
     private string work_phone = "";
     private string all_phones;
+    private string detailedInformation;
 
     public ContactData(string first_name, string last_name, string e_mail)
     {
@@ -37,6 +38,20 @@ namespace WebAddressbookTests
     {
       get => e_mail;
       set => e_mail = value;
+    }
+
+    public string DetailedInformation
+    {
+      
+      set => detailedInformation = value;
+      get
+      {
+        if (detailedInformation != null)
+          return detailedInformation;
+        else
+          return $"{FirstName} {LastName}\r\n{MainAddress}\r\n" +
+                 $"\r\nM: {AllPhones}\r\n\r\n{EMail}";
+      }
     }
 
     // all phones by one record

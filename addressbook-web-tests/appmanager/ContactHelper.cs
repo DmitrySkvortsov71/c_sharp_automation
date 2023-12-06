@@ -145,9 +145,10 @@ namespace WebAddressbookTests
       var lastName = cells[1].Text;
       var firstName = cells[2].Text;
       var address = cells[3].Text;
+      var eMail = cells[4].Text;
       var allPhones = cells[5].Text;
 
-      return new ContactData(firstName, lastName, "")
+      return new ContactData(firstName, lastName, eMail)
       {
           MainAddress = address,
           AllPhones = allPhones
@@ -184,6 +185,20 @@ namespace WebAddressbookTests
       var m = new Regex(@"\d+").Match(text);
 
       return int.Parse(m.Value);
+    }
+
+    public ContactHelper OpenContactDetailsPage(int index)
+    {
+      driver.FindElements(By.CssSelector("a[href^='view.php?id=']"))[index].Click();
+      return this;
+    }
+    
+    public string GetContactDetailedInformationFromDetailsPage(int index)
+    {
+      manager.Navigator.OpenHomePage();
+      OpenContactDetailsPage(index);
+
+      return driver.FindElement(By.CssSelector("[id='content']")).Text;
     }
   }
 }

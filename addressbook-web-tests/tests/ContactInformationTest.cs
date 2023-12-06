@@ -24,5 +24,17 @@ namespace WebAddressbookTests
 
       Assert.AreEqual(contactFromTable.AllPhones, contactFromEditForm.AllPhones);
     }
+    
+    [Test]
+    public void ContactDetailInformationTest()
+    {
+      var index = 0;
+      
+      var contactFromTable = app.Contacts.GetContactInformationFromTable(index);
+      var contactDetailedInformationFromDetailPage = app.Contacts.GetContactDetailedInformationFromDetailsPage(index);
+      
+      Assert.AreEqual(contactFromTable.DetailedInformation, contactDetailedInformationFromDetailPage);
+
+    }    
   }
 }
