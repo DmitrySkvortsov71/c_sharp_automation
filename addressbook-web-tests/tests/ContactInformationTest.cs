@@ -25,18 +25,20 @@ namespace WebAddressbookTests
       Assert.AreEqual(contactFromTable.AllPhones, contactFromEditForm.AllPhones);
     }
     
-    [Test]
-    public void ContactDetailInformationTest()
-    {
-      var index = 0;
-      
-      
-      var contactFromTable = app.Contacts.GetContactInformationFromTable(index);
-      var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(
-          index, true);
-      
-      Assert.AreEqual(contactFromTable.DetailedInformation, contactDetailedInformation);
 
-    }    
+    [Test]
+    public void ContactDetailsVsEditFormInformationTest()
+    {
+      // compare Contact Edit Form Info & Contact Details Page info
+      
+      int index = 0;
+      
+      var contactFromEditForm = app.Contacts.GetContactInformationFromEditForm(index);
+      var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(index, true);
+
+      Assert.AreEqual(contactFromEditForm.DetailsInformation, contactDetailedInformation);
+      
+    }
+    
   }
 }

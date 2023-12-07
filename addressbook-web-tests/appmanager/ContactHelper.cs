@@ -163,12 +163,13 @@ namespace WebAddressbookTests
 
       var firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
       var lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+      var email = driver.FindElement(By.Name("email")).GetAttribute("value");
       var address = driver.FindElement(By.Name("address")).GetAttribute("value");
       var homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
       var mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
       var workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
 
-      return new ContactData(firstName, lastName, "")
+      return new ContactData(firstName, lastName, email)
       {
           MainAddress = address,
           MobilePhone = mobilePhone,
@@ -193,19 +194,13 @@ namespace WebAddressbookTests
       return this;
     }
     
-    public string GetContactDetailedInformationFromDetailsPage(int index, bool tableAllPhonesFormat = false)
+    public string GetContactDetailedInformationFromDetailsPage(int index, bool trimmed = false)
     {
       manager.Navigator.OpenHomePage();
       OpenContactDetailsPage(index);
       
       var rawDetailsInformation = driver.FindElement(By.CssSelector("[id='content']")).Text;
-      
-      if (!tableAllPhonesFormat) return rawDetailsInformation;
-      else
-        return rawDetailsInformation
-            .Replace("M: ", "")
-            .Replace("H: ", "")
-            .Replace("W: ", "");
+      return !trimmed ? rawDetailsInformation : rawDetailsInformation.Replace($"\r\n", "");
     }
   }
 }

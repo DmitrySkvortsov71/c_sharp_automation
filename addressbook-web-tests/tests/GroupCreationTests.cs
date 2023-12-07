@@ -1,51 +1,28 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace WebAddressbookTests
 {
   [TestFixture]
   public class GroupCreationTests : AuthTestBase
   {
-    [Test]
-    public void GroupCreationTest()
+    public static IEnumerable<GroupData> RandomGroupDataProvider()
+    {
+      var groups = new List<GroupData>();
+
+      return groups;
+    }
+    
+    [Test, TestCaseSource("RandomGroupDataProvider")]
+    public void GroupCreationTest(GroupData group)
     {
       var oldGroups = app.Groups.GetGroupsList();
-
-      var group = new GroupData("bbb")
-      {
-          Header = "bbb header",
-          Footer = "bbb footer"
-      };
+      
       app.Groups.Create(group);
 
       // verification
       Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupsCount());
 
-      var newGroups = app.Groups.GetGroupsList();
-      oldGroups.Add(group);
-      oldGroups.Sort();
-      newGroups.Sort();
-
-      Assert.AreEqual(oldGroups, newGroups);
-    }
-
-    [Test]
-    public void EmptyGroupCreationTest()
-    {
-      // preparation
-      var oldGroups = app.Groups.GetGroupsList();
-
-      // action
-      var group = new GroupData("")
-      {
-          Header = "",
-          Footer = ""
-      };
-      app.Groups.Create(group);
-
-      // fast verification
-      Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupsCount());
-
-      // full verification
       var newGroups = app.Groups.GetGroupsList();
       oldGroups.Add(group);
       oldGroups.Sort();
