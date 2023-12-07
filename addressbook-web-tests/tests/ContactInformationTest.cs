@@ -35,7 +35,7 @@ namespace WebAddressbookTests
       var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(
           index, true);
       
-      StringAssert.Contains(contactFromTable.AllPhones,contactDetailedInformation);
+      Assert.AreEqual(contactFromTable.DetailedInformation, contactDetailedInformation);
 
     }    
   }
