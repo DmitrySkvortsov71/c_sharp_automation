@@ -13,7 +13,6 @@ namespace WebAddressbookTests
     private string second_address = "";
     private string work_phone = "";
     private string all_phones;
-    private string detailedInformation;
 
     public ContactData(string first_name, string last_name, string e_mail)
     {
@@ -38,36 +37,6 @@ namespace WebAddressbookTests
     {
       get => e_mail;
       set => e_mail = value;
-    }
-
-    public string DetailedInformation
-    {
-      
-      set => detailedInformation = value;
-      get
-      {
-        if (detailedInformation != null)
-          return detailedInformation;
-        else
-        {
-          detailedInformation = "";
-          
-          if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
-            detailedInformation += $"{FirstName} {LastName}";
-          else
-          {
-            if (!string.IsNullOrWhiteSpace(FirstName)) detailedInformation += FirstName;
-            if (!string.IsNullOrWhiteSpace(LastName)) detailedInformation += LastName;
-          }
-            
-            
-          if (!string.IsNullOrWhiteSpace(MainAddress)) detailedInformation += $"\r\n{MainAddress}";
-          if (!string.IsNullOrWhiteSpace(AllPhones)) detailedInformation += $"\r\n\r\nM: {AllPhones}";
-          if (!string.IsNullOrWhiteSpace(EMail)) detailedInformation += $"\r\n\r\n{EMail}";
-
-          return detailedInformation;
-        }
-      }
     }
 
     // all phones by one record
@@ -142,4 +111,5 @@ namespace WebAddressbookTests
       return "Last Name: " + LastName + " | First Name: " + FirstName;
     }
   }
+  
 }

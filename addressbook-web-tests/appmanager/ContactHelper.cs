@@ -151,7 +151,7 @@ namespace WebAddressbookTests
       return new ContactData(firstName, lastName, eMail)
       {
           MainAddress = address,
-          AllPhones = allPhones
+          AllPhones = allPhones,
       };
     }
 
@@ -193,12 +193,19 @@ namespace WebAddressbookTests
       return this;
     }
     
-    public string GetContactDetailedInformationFromDetailsPage(int index)
+    public string GetContactDetailedInformationFromDetailsPage(int index, bool tableAllPhonesFormat = false)
     {
       manager.Navigator.OpenHomePage();
       OpenContactDetailsPage(index);
-
-      return driver.FindElement(By.CssSelector("[id='content']")).Text;
+      
+      var rawDetailsInformation = driver.FindElement(By.CssSelector("[id='content']")).Text;
+      
+      if (!tableAllPhonesFormat) return rawDetailsInformation;
+      else
+        return rawDetailsInformation
+            .Replace("M: ", "")
+            .Replace("H: ", "")
+            .Replace("W: ", "");
     }
   }
 }

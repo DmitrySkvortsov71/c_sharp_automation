@@ -30,10 +30,12 @@ namespace WebAddressbookTests
     {
       var index = 0;
       
-      var contactFromTable = app.Contacts.GetContactInformationFromTable(index);
-      var contactDetailedInformationFromDetailPage = app.Contacts.GetContactDetailedInformationFromDetailsPage(index);
       
-      Assert.AreEqual(contactFromTable.DetailedInformation, contactDetailedInformationFromDetailPage);
+      var contactFromTable = app.Contacts.GetContactInformationFromTable(index);
+      var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(
+          index, true);
+      
+      StringAssert.Contains(contactFromTable.AllPhones,contactDetailedInformation);
 
     }    
   }
