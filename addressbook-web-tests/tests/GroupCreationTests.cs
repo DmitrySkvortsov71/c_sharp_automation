@@ -8,12 +8,25 @@ namespace WebAddressbookTests
   {
     public static IEnumerable<GroupData> RandomGroupDataProvider()
     {
+      var lenth = 5;
+      var randomStringLengh = 5;
+      
       var groups = new List<GroupData>();
+
+      for (int i = 0; i < lenth; i++)
+      {
+        groups.Add(new GroupData(GenerateRandomString(randomStringLengh))
+        {
+            Header = GenerateRandomString(2 * randomStringLengh), 
+            Footer = GenerateRandomString(2 * randomStringLengh)
+        });
+      }
 
       return groups;
     }
     
-    [Test, TestCaseSource("RandomGroupDataProvider")]
+
+    [Test, TestCaseSource(nameof(RandomGroupDataProvider))]
     public void GroupCreationTest(GroupData group)
     {
       var oldGroups = app.Groups.GetGroupsList();

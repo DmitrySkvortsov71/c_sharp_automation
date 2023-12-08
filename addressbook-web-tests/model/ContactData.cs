@@ -13,7 +13,6 @@ namespace WebAddressbookTests
     private string second_address = "";
     private string work_phone = "";
     private string all_phones;
-    private string detailedInformation;
     private string detailsInformation;
 
     public ContactData(string first_name, string last_name, string e_mail)
@@ -110,8 +109,6 @@ namespace WebAddressbookTests
       }
     }
     
-    
-
     // all phones by one record
     public string AllPhones
     {
@@ -181,7 +178,9 @@ namespace WebAddressbookTests
 
     public override string ToString()
     {
-      return "Last Name: " + LastName + " | First Name: " + FirstName;
+      return $"first name: {FirstName} | last name: {LastName} | e-mail: {EMail} |" +
+             $"home phone: {HomePhone} | mobile: {MobilePhone} | work phone: {WorkPhone} |" +
+             $"address: {MainAddress}";
     }
   }
 }  

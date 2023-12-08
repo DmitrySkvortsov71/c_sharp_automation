@@ -1,20 +1,40 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace WebAddressbookTests
 {
   [TestFixture]
   public class ContactCreationTests : AuthTestBase
   {
+    public static IEnumerable<ContactData> RandomContactDataProvider()
+    {
+      const int contactsQuantity = 3;
+      const int randomStringLenght = 7;
+      const int numberMin = 1111111;
+      const int numberMax = 9999999;
+
+      var contacts = new List<ContactData>();
+      for (var i = 0; i < contactsQuantity; i++)
+        contacts.Add(new ContactData(
+            GenerateRandomString(randomStringLenght), 
+            GenerateRandomString(randomStringLenght), 
+            $"{GenerateRandomString(randomStringLenght)}@g.com")
+            {
+                MobilePhone = GenerateRandomNumber(numberMin, numberMax),
+                HomePhone = GenerateRandomNumber(numberMin, numberMax),
+                WorkPhone = GenerateRandomNumber(numberMin, numberMax)
+            }
+        );
+
+      return contacts;
+    }
+
     [Test]
-    public void ContactCreationTest()
+    [TestCaseSource(nameof(RandomContactDataProvider))]
+    public void ContactCreationTest(ContactData contact)
     {
       var oldContacts = app.Contacts.GetContactsList();
-
-      var contact = new ContactData("werty", "qwerty", "werty.qwert@gmail.com")
-      {
-          MobilePhone = "+711111111",
-          MainAddress = "kjhdsfkhjskdhjf"
-      };
+      
 
       app.Contacts.Create(contact);
 
