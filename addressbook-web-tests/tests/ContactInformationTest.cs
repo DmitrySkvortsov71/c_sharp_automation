@@ -24,21 +24,19 @@ namespace WebAddressbookTests
 
       Assert.AreEqual(contactFromTable.AllPhones, contactFromEditForm.AllPhones);
     }
-    
+
 
     [Test]
     public void ContactDetailsVsEditFormInformationTest()
     {
       // compare Contact Edit Form Info & Contact Details Page info
-      
-      int index = 0;
-      
+
+      var index = 0;
+
       var contactFromEditForm = app.Contacts.GetContactInformationFromEditForm(index);
-      var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(index, true);
+      var contactDetailedInformation = app.Contacts.GetContactDetailedInformationFromDetailsPage(index);
 
       Assert.AreEqual(contactFromEditForm.DetailsInformation, contactDetailedInformation);
-      
     }
-    
   }
 }

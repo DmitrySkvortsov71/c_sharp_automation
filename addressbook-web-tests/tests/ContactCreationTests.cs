@@ -16,9 +16,9 @@ namespace WebAddressbookTests
       var contacts = new List<ContactData>();
       for (var i = 0; i < contactsQuantity; i++)
         contacts.Add(new ContactData(
-            GenerateRandomString(randomStringLenght), 
-            GenerateRandomString(randomStringLenght), 
-            $"{GenerateRandomString(randomStringLenght)}@g.com")
+                GenerateRandomString(randomStringLenght),
+                GenerateRandomString(randomStringLenght),
+                $"{GenerateRandomString(randomStringLenght)}@g.com")
             {
                 MobilePhone = GenerateRandomNumber(numberMin, numberMax),
                 HomePhone = GenerateRandomNumber(numberMin, numberMax),
@@ -34,7 +34,7 @@ namespace WebAddressbookTests
     public void ContactCreationTest(ContactData contact)
     {
       var oldContacts = app.Contacts.GetContactsList();
-      
+
 
       app.Contacts.Create(contact);
 
