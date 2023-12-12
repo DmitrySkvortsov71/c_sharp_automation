@@ -21,7 +21,7 @@ namespace WebAddressbookTests
       var l = Convert.ToInt32(Rnd.NextDouble() * randomStringLenght);
       var builder = new StringBuilder();
 
-      for (var i = 0; i < l; i++) builder.Append(Convert.ToChar(32 + Convert.ToInt32(Rnd.NextDouble() * 223 + 32)));
+      for (var i = 0; i < l; i++) builder.Append(Convert.ToChar(32 + Convert.ToInt32(Rnd.NextDouble() * 65)));
 
       return builder.ToString();
     }

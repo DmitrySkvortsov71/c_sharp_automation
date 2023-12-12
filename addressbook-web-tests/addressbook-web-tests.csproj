@@ -75,6 +75,11 @@
         <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="119.0.6045.10500"/>
         <PackageReference Include="System.Drawing.Common" Version="7.0.0"/>
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="groups.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
     <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')"/>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>

@@ -61,34 +61,37 @@ namespace WebAddressbookTests
           var last = !string.IsNullOrWhiteSpace(LastName);
           var address = !string.IsNullOrWhiteSpace(MainAddress);
           var email = !string.IsNullOrWhiteSpace(EMail);
-          
+
           if (first && last)
+          {
             detailsInformation += $"{FirstName} {LastName}";
+          }
           else
           {
             if (first) detailsInformation += FirstName;
             if (last) detailsInformation += LastName;
           }
+
           if ((first || last) && address) detailsInformation += $"\r\n";
-          
+
           if (address) detailsInformation += $"{MainAddress}";
           if ((first || last || address) && (mobile || home || work)) detailsInformation += $"\r\n\r\n";
-          
+
           if (home) detailsInformation += $"H: {HomePhone}";
           if (home && (mobile || work)) detailsInformation += $"\r\n";
-          
+
           if (mobile) detailsInformation += $"M: {MobilePhone}";
           if (mobile && work) detailsInformation += $"\r\n";
-          
+
           if (work) detailsInformation += $"W: {WorkPhone}";
-          
+
           if ((first || last || address || home || mobile || work) && email) detailsInformation += $"\r\n\r\n";
           if (email) detailsInformation += $"{EMail}";
-          
+
           return detailsInformation;
 
           // trimmed Details info (without "\r\n")
-          
+
           // detailsInformation = "";
           //
           // if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))

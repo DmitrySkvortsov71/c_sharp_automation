@@ -47,7 +47,7 @@ namespace WebAddressbookTests
 
     public override string ToString()
     {
-      return $"name: {Name}\n header: {Header}\n footer: {Footer}";
+      return $"name: {Name} | header: {Header} | footer: {Footer}";
     }
   }
 }
