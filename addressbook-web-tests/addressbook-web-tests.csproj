@@ -41,7 +41,7 @@
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Drawing"/>
-        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="appmanager\ApplicationManager.cs"/>
@@ -67,7 +67,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="MSTest.TestFramework" Version="2.1.2"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="NUnit" Version="3.14.0"/>
         <PackageReference Include="NUnit.ConsoleRunner" Version="3.16.3"/>
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
@@ -80,8 +80,11 @@
         <Content Include="groups.csv">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="groups.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="groups.xml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
     <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')"/>

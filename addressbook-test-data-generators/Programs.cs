@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebAddressbookTests;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using WebAddressbookTests;
 
 namespace addressbook_test_data_generators
 {
@@ -34,12 +34,20 @@ namespace addressbook_test_data_generators
         case "xml":
           WriteGroupsToXmlFile(groups, writer);
           break;
+        case "json":
+          WriteGroupsToJsonFile(groups, writer);
+          break;
         default:
           Console.Out.WriteLine($"Unrecognized file format: {format}");
           break;
       }
+
       writer.Close();
-      
+    }
+
+    private static void WriteGroupsToJsonFile(List<GroupData> groups, StreamWriter writer)
+    {
+      writer.Write(JsonConvert.SerializeObject(groups, Formatting.Indented));
     }
 
     private static void WriteGroupsToCsvFile(List<GroupData> groups, StreamWriter writer)

@@ -13,7 +13,7 @@ namespace WebAddressbookTests
       Header = header;
       Footer = footer;
     }
-    
+
     /// for group data generators\xml serializers
     public GroupData()
     {
