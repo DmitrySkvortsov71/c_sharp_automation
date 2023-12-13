@@ -28,7 +28,7 @@ namespace WebAddressbookTests
 
       return contacts;
     }
-    
+
 
     [Test]
     [TestCaseSource(nameof(RandomContactDataProvider))]
