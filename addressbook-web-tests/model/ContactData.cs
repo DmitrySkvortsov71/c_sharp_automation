@@ -22,6 +22,11 @@ namespace WebAddressbookTests
       this.e_mail = e_mail;
     }
 
+    // for data generators
+    public ContactData()
+    {
+    }
+
     public string FirstName
     {
       get => first_name;
