@@ -66,6 +66,7 @@
         <Compile Include="tests\TestBase.cs"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
         <PackageReference Include="MSTest.TestFramework" Version="2.1.2"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="NUnit" Version="3.14.0"/>

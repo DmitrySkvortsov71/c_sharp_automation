@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.IO;
 using System.Xml;
 using Newtonsoft.Json;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Xml.Serialization;
 
 namespace WebAddressbookTests
@@ -57,6 +58,35 @@ namespace WebAddressbookTests
     {
       return JsonConvert
           .DeserializeObject<List<GroupData>>(File.ReadAllText(@"groups.json"));
+    }
+    
+    public static IEnumerable<GroupData> GroupDataFromExcelFile()
+    {
+      var groups = new List<GroupData>();
+
+      var app = new Excel.Application
+      {
+          Visible = false
+      };
+      
+      var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx");
+      var wb = app.Workbooks.Open(fullPath);
+      var sheet = (Excel.Worksheet)wb.Sheets[1];
+
+      var range = sheet.UsedRange;
+      for (var i = 0; i < range.Rows.Count; i++)
+      {
+        groups.Add(new GroupData()
+        {
+            Name = range.Cells[i, 1].ToString(),
+            Header = range.Cells[i, 2].ToString(),
+            Footer = range.Cells[i, 3].ToString()
+        });
+      }
+      wb.Close();
+      app.Quit();
+      
+      return groups;
     }
 
 
