@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using System.IO;
-using System.Xml;
-using Newtonsoft.Json;
-using Excel = Microsoft.Office.Interop.Excel;
 using System.Xml.Serialization;
+using Microsoft.Office.Interop.Excel;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace WebAddressbookTests
 {
@@ -64,14 +63,14 @@ namespace WebAddressbookTests
     {
       var groups = new List<GroupData>();
 
-      var app = new Excel.Application
+      var app = new Application
       {
           Visible = false
       };
 
       var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx");
       var wb = app.Workbooks.Open(fullPath);
-      var sheet = (Excel.Worksheet)wb.Sheets[1];
+      var sheet = (Worksheet)wb.Sheets[1];
 
       var range = sheet.UsedRange;
       for (var i = 0; i < range.Rows.Count; i++)
