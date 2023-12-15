@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
@@ -104,6 +105,13 @@ namespace WebAddressbookTests
       newGroups.Sort();
 
       Assert.AreEqual(oldGroups, newGroups);
+    }
+
+    [Test]
+    public void TestDbConnectivity()
+    {
+      var newGroups = app.Groups.GetGroupsList();
+      var fromDb = GroupData.GetAll();
     }
   }
 }

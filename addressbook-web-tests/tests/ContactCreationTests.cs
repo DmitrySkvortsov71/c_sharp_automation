@@ -31,13 +31,13 @@ namespace WebAddressbookTests
 
       return contacts;
     }
-    
+
     public static IEnumerable<ContactData> ContactsDataFromXmlFile()
     {
       return (List<ContactData>)new XmlSerializer(typeof(List<GroupData>))
           .Deserialize(new StreamReader(@"contacts.xml"));
     }
-    
+
     public static IEnumerable<ContactData> ContactsDataFromJsonFile()
     {
       return JsonConvert

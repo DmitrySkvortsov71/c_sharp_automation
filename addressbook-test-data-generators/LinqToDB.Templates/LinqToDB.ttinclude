@@ -1,0 +1,1441 @@
+<#@ assembly name="System.Data"                    #>
+<#@ import namespace="System.Data"                 #>
+<#@ import namespace="System.Globalization"        #>
+<#@ import namespace="LinqToDB"                    #>
+<#@ import namespace="LinqToDB.Data"               #>
+<#@ import namespace="LinqToDB.SqlProvider"        #>
+<#@ import namespace="LinqToDB.SqlQuery"           #>
+<#@ include file="DataModel.ttinclude" once="true" #>
+<#
+	if                   aseDataContextClass == null)
+		BaseDataC                     textClass = DB.Data.DataConnection";
+#>
+<#+
+Action BeforeGenerate    inqToDBModel = () > {};
+Action AfterGenerateLinqToDBModel  = () => {};
+
+public Func<Table,MemberBase> G    nerateProficTable = _ => null;
+public Func<Parameter, boo    >  GenerateProceeDbType       = _ => fse;
+
+static bool GenerateLinqToDBConne    tionOptionsConstors
+{
+	get ;
+	set { GerateDataOptionsConstructors = value; }
+}
+
+            atic             ol GenerateDataOptionsConstructors = true;
+bool      GenerateObsoletetributeForAliases  = fse;
+bool   Gc.ColumnType.Length                  = true;
+bool   IsCompactColumns                     = true;
+bool   CompactColumc.DataType.Length    = tru    ;
+bool   GenerateDataTypes                       = false;
+bool?  GenerateLeng    hPr        erty                             null;
+bool?  GeneratePrecisionProp        ty            = null;
+bool?         enerateScaleProperty                        nu            
+bool   GenerateDbTypes                      = false;
+bo              GenerateSchemaAsType                 = false;
+bool   GenerateViews                                 = true;
+bool   GeneratePro            ureResultAsList        =        als        
+bool   GenerateProcedures        Typ            ontext     = true;
+bool   PrefixTableMappingWithS            ma         = true;
+bool         Pref        TableMappingForDefault        hem             = false;
+string SchemaNameSuffix                     = "Schema";
+s            ng SchemaDataContextTypeName            = "DataContext";
+
+public Dictio            y<string,string> SchemaN        eMap        ng = new Dictionary<stri        ,st            g>();
+
+public Func<string,string,IEnumerable<Method>> GetConstruct             =  GetConstructorsImpl;
+
+public Func<Column, string, string, bool, str            > BuildColumnComparison         (c,         ddin(GenerateDataTypes && !GenerateLengthProperty.HasValue)0}{2}{3}", c.MemberName, padding1, la         ?             : padding2, l ? ");" 
+	                 " &&");
+
+private static IEnrable<Method> GetConstructorsImpl(string defaultConfiguration, string n            )
+{
+	if (defaultConfigur        ion          nul(GenerateDataTypes && !GeneratePrecisionProperty.HasValue)sNullOrEmpty(GetDataOptionsMethod))
+			m        fte            gnature.Add(": base(" + string.Format(GetDataOptionsMethod, "") + ")");
+
+            ield return m;
+	}
+	else
+        yiel        retu(GenerateDataTypes && !GenerateScaleProperty.HasValue)string.IsNullOrEmpty(GetDataOptionsM        hod            
+				": base + defaultConfiguration + "\")" :
+				": base(" +            ring.Format(GetDataOptio        Meth        , '"' + defaultConfiguration + '"') +         "
+	            ;
+
+	yield return new Method(null, name, n            Func<string>[] { () => "        ring        onfiguration" }) { AfterSignature =
+	{        	st            g.IsNullOrEmpty(GetDataOptionsMethod) ?
+	            : base(configuration)" :        		":        ase(" + string.Format(Ge        ata            ionsMethod, "configuration") + ")"
+	} };
+
+	i            GenerateDataOptionsConst        ctor        
+	{
+		yield return new Method(        ll, name        new         nc<string>[] { () =>         ata            ions options" }) { AfterSignature = { ":             e(options)" } }                yield return new Method(null, name, new Func<string>            { () => string.Forma                ataOptions<{0}> options", n            ) }) { AfterSignature = {             base(options.Options)"         };
+	        }
+
+void Genera        Type        romMetadata()
+{
+	Be        reG            rateLinqToDBModel();
+
+	Model.Usings.Add            inqToDB");
+	Model.Us                .Add("LinqToDB.Mapping");
+	            el.Usings.Add("LinqToDB.        nfig        ation");
+
+	if         ames        ceName == null)
+		N            spaceName = "DataModel";
+
+	string schemaName;
+
+	var schemas =
+	(
+		from t i        Tables.Values
+		where Gen            teSchemaAsType && t.Schema != null && !t.Table        hema.IsDefaultSchema
+		group t by t.Schema into gr
+		orderby gr.        y
+		let typeName = SchemaNameMa            ng.TryGetValue(gr.Key, out schemaName)         schemaName : gr.Key
+	        elec        new
+		{
+			Name            = gr.Key        			TypeName        = typeName + SchemaNameS        fix,
+			PropertyName    = typeName
+			Props                 = new MemberGroup         IsCompact         true        ,
+			Aliases         = new MemberGroup { IsCompact = true        Reg             = "Alias members" },
+			Tab                    tensions = new M                            rGroup { Regio                            "Table Extensions" },
+			Type                                    = new Class(typeName + SchemaNameS uffix)            IsStatic = true },
+			Tables          = gr.            ist(),
+			DataContext     = new Class(Sche                taContextTypeName),
+			Procedures      = new MemberGroup(),
+			Functions       = new MemberGroup(),
+			Tab            unctions  = new MemberGroup { Region = "Table Funtions" }
+		}
+	).ToDictionary(t => t.N            );
+
+	var procSchemas =
+	(
+		from p i        Pro    edur    s.Values
+		where GenerateS    hemaAsType && p.Schema != null && !p.I        efaultSchema && !schemas.Contain    Key(p.Schema)
+		group p by p.Schema into gr
+		orderby gr.Key    		l         typeName = SchemaNameMapping.TryGetValue(gr        ey, out schemaName) ? schemaNa            : gr.Key
+		select new
+		{
+			Name            = gr.Key,
+			Ty        Name        = typeNam        + S            maNameSuffix,
+			ame    = typeName,
+			Props           = new Memb            roup { IsCompact = true },
+			Aliases         = new MemberGroup { IsCompact = t rue,             ion = "Alias members" },
+			TableExtensions = new Memb            rou                Region = "Table Extensions" },
+	                pe            = new Class(typeName + SchemaNameSuffi                    IsStatic = true },
+			Tables          = new List<Table>(),
+			Da                ntext     = new Class(SchemaDataContextTypeName),
+			Proce                s      = new MemberGroup(),
+			Fu                ons       = new MemberGroup(),
+			TableFunctions  = new M                rGroup { Region = "Table Functions"                	}
+	).ToDictionary(s => s.Name);
+
+	foreach(var schema i                    cSchemas)
+		schem
+	                            s.Add
+	                                    schema.Key, schema.Value);
+
+	var defPro
+	                                            s           = new MemberGroup { IsCompact = true };
+	va                fAlias                          = new Membe
+	                            Group
+	                                    { IsCompact = true, Region = "Alias members" };
+	var defTableExtensions 
+	                                             new MemberGroup();
+
+	if (schem                ount > 0)
+	{
+		var body = new List<Func<I                erable<string>>>();
+
+		var scm
+                                                                    Group   = new MemberGroup { Regio
+                                                                             = "Schemas" };
+		var sche
+                                                                                Members = new MemberGroup { IsCompac                true   };
+
+		var maxLen1 = schm
+             s.Values.Max(schema => schema.PropertyName.Trim().Length);
+		var maxLen2 = schemas.Values.Max(sche                > schema.TypeName.    Trim().Length);
+
+		foreach (var schema in schemas.                es)
+		{
+			schemaMembers.M                rs.Add(new Property(true, () => schema.TypeNa                 "." + SchemaDataContextTypeName, scema.Prope                ame));
+			body.Add(() => new [] {                	schema.Propert
+	                        Name + LenD
+	                                iff(m
+	                                        xLen1, schema.PropertyName) +
+				" = new " + schema.TypeName 
+	                                                 "." + LenDiff(maxLen2, sch                                        ypeName) +
+				SchemaDataContextTypeName                         thi                            );
+			schemaGroup.Members.Add(schemaMembers);
+		                            aGroup.Members.Ad                        w Met                () => "void", "InitSchemas", new Func<string>[0], body.ToArray()));
+
+		DataContextObject.Members.Add(                maGroup);
+	}
+
+	if (GenerateConstructors)
+	{
+		foreach (var                  GetConstructors(DefaultConfigur                n, DataContextObject.Name))
+		{
+			if (                dyBuilders.Count > 0)
+				c.BodyBuilders.Add                => new[] { "" });
+
+			if (schemas.Count >                				c.BodyBuilders.Add(() => n                 {                                                                                                             Schemas(
+                                                                                                                     ;" });
+
+			c.Body
+                                                                                                                             Buil                                                                                                             dd(                                                                                                                     ew [] {
+                                                                                                                     "InitDataContext();", "I                                                                                                                     ingSche
+                                                                                                                     ma()
+                                                                                                                             ;" });
+
+			
+                                                                                                                             DataContextOb
+                                                                                                                      ect
+                                                                                                                              .Members.Ad
+                                                                                                                              d(c);
+		}
+
+                                                                                                                     ontextO
+                                                                                                                     bject.Members.Add(new                                                                                                             rGrou
+                                                                                                                     p
+	
+                                                                                                                             {
+                                                                                                                                     	
+                                                                                                                                     	I
+                                                                                                                     Com
+                                                                                                                     act
+                                                                                                                              = true,
+			M
+                                                                                                                             embers 
+                                                                                                                      =
+		                                                                                                             	n                                                                                                                 od
+                                                                                                                         (() => 
+                                                                                                                         "void",                                                                                                                         taConte
+                                                                                                                         xt" 
+                                                                                                                                  ) { AccessMo
+                                                                                                                                 d
+                                                                                                                                         i
+                                                                                                                                 f
+                                                                                                                                 ier = AccessM                                                                                                                         Partial
+                                                                                                                          },
+				new M                                                                                                                          => "vo
+                                                                                                                         id",
+                                                                                                                                  "InitMappin
+                                                                                                                                 g
+                                                                                                                                         S
+                                                                                                                                 c
+                                                                                                                                 hema") { Acce                                                                                                                         er = Ac
+                                                                                                                         cessModifi                                                                                                             ti                                                                                                             		}
+		});
+                                                                                                                     	}
+                                                                                                                     
+	i                                                                                                             les.Count 
+                                                                                                                     > 0)
+		D                                                                                                             textOb
+                                                                                                                     ec
+                                                                                                                             t.Members
+                                                                                                                             .Inse                , def                s);
+
+	foreach (var schema in schemas.Values)
+	{
+		schema.                .Members.Add(schema.DataContext);
+		schema.DataC                xt.Members.Insert(0, schema.Props);
+
+		schema.DataConte                emb                    dd(new Field
+	                            (() => "IDa
+	                                    taContext", "_dataContext") { AccessModifier = AccessModifier.Private, IsReadonly
+	                                            = true });
+		schema.DataContext.Members.Add(n                    thod(() => null, schema.DataC
+	                            ontext.Name, new Func<string>[] { () => "IDataContext dataContext" }, () => new[] { "_dataConte                    dataContext;" }));
+
+		foreach (var t in schema.Tables)
+	                    	t.TypePrefix = schema.TypeN                     ".";
+		}
+	}
+
+	var associa                    xtensions = new MemberGroup() {Regio                    Associations"};
+
+	foreach (var t in Table                    ues.OrderBy(tbl => tbl.IsProviderSpeci                    ThenBy(tbl => tbl.TypeName))
+	{
+		Ac                    Cl                                  dType     = tp => Model.Types.                                  ;
+	                                          ps                 = defProps;
+                                          iases               = defAliases;
+	                                          leExtensions       = defTabl                                  ions;
+
+		if (t.IsView && !GenerateViews) {
+			con                                  		                                       schema = t.Sche                                              l && schemas.ContainsKey(t.Schema) ? sc                                              chema] : null;
+
+		if                                              != null)
+		{
+			var si = schemas[t.Schem                                              ddType         =                                   i.                                  mbers.Add(tp);
+	                                             = si.Pr                                  	aliases         = si.A                    s;
+		                    eExtensions = si.TableExtension                    }
+                                                                                   erBase d
+                                                                                           Prop = t.IsProvide
+                                                                                                   rSpecific ?
+			Gen                                                                                   oviderSpecificTab                                                                                   
+			new Property(
+	                                                                                        string.Format("ITable<{0}>", t.T                                                                                   ),
+		                                                                                       ContextPropertyName,
+				                                                                                   ew[] { strng.Format((schema == nu                    "this"                    dataContext") + ".GetTable<{0}>()", t.TypeNa                });            	if             Prop == null) continue;
+
+		                taContextProperty = dcProp;
+
+	            ops.Members.Add(dcProp);
+
+		Property                op = null;
+
+		if (t.AliasPropertyName != null && t.AliasPro        rty    ame     = t.DataContextPropertyName)
+		{
+			aProp    = n         Propert) => string.Format("ITable<{0}>", t.TypeName),
+				t.Alia        ropertyName,
+				() => new[] { t.DataContextPropertyName });
+
+			         (GenerateObsoleteAttributeForAliases)
+				aProp.Attributes.Add(new Attribute("Ob        lete", ToStringLiteral("Use "                 .DataContextP                        rtyName + " instead.")));
+
+			aliases.Members.Add(aProp);
+	                                		var tab                                trs = new List<string>();
+
+		if (GenerateDatabaseNameFromTable && t.TableSchema.Ca                                        Name != null)
+			tableAttrs.Add("Database=" + ToStringLiteral(t.TableSchema.CatalogN                                );
+		else if (DatabaseName != null)
+			tableAttrs.Ad                                        tabase=" + ToStringLitera l(Datab                                        me                                                                                                                                              if 
+                                                                                                                                                      Se
+                                                                                                                                                              v
+                                                                                                                                                              rName !=
+                                                                                                                                                                       
+                                                                                                                                                                              null) 
+                                                                                                                                                                              t
+                                                                                                                                                                      ableA                                                                                                                                              d(
+                                                                                                                                                      S
+                                                                                                                                                      e
+                                                                                                                                                              rver=" + ToStri
+                                                                                                                                                      gLiter                                                                                                                                                  rN
+                                                                                                                                                          ame)
+                                                                                                                                                          );
+		if (
+                                                                                                                                                           .
+                                                                                                                                                                   Schema   != null                                                                                                                                              At
+                                                                                                                                                      trs.
+                                                                                                                                                      Add("Schema=" + ToStri
+                                                                                                                                                              ngL
+                                                                                                                                                                      teral(t
+                                                                                                                                                                              .TableSchema.
+                                                                                                                                                                                      c
+                                                                                                                                                                                              hemaName ?? t
+                                                                                                                                                                      Schema)
+                                                                                                                                                                              );
+
+		tableAt
+                                                                                                                                                                                      r
+                                                                                                                                                                                              s.Add((tableA
+                                                                                                                                                                      trs.
+                                                                                                                                                                      ount =
+                                                                                                                                                                       0 ? "                                                                                                                                              me
+                                                                                                                                                      "
+                                                                                                                                                      )
+                                                                                                                                                               + ToStringLite
+                                                                                                                                                      al(t.T                                                                                                                                              e)                                                                                                                                                   (
+                                                                                                                                                          .
+                                                                                                                                                          Is
+                                                                                                                                                                  V
+                                                                                                                                                                          i
+                                                                                                                                                                  e
+                                                                                                                                                                  w)
+			tab
+                                                                                                                                                                  leAttrs.                                                                                                                                                  ie                                                                                                                                                      
+
+
+                                                                                                                                                              	
+                                                                                                                                                                      	
+                                                                                                                                                              t
+                                                                                                                                                              A
+                                                                                                                                                              tr
+                                                                                                                                                                      i
+                                                                                                                                                                              b
+                                                                                                                                                                      u
+                                                                                                                                                                      tes.Add(ne
+                                                                                                                                                                      w A
+                                                                                                                                                                              tr
+                                                                                                                                                                                      i
+                                                                                                                                                                                              b
+                                                                                                                                                                                      u
+                                                                                                                                                                                      te("Table
+                                                                                                                                                                              , ta                                                                                                                                                      To
+                                                                                                                                                              Arra
+                                                                                                                                                              y()) { IsSep                                                                                                                                                      tr
+                                                                                                                                                              ue }
+                                                                                                                                                               );
+
+		var c                                                                                                                                                  =                                                                                                                                                   lComm                                                                                                                                                  ex                                                                                                                                                      ip
+                                                                                                                                                              tion
+                                                                                                                                                              );
+
+		if (co                                                                                                                                                  ou                                                                                                                                              
+		                                                                                                                                                   C
+                                                                                                                                                      mment                                        ange(c                ent                    			dcProp.Comment                dRang    (com    ents);
+
+			aPr    p?.Comment.AddRange(comments);
+		}
+
+		var columns                 = new MemberGroup { IsCompact = IsCompac        olu             };
+		var columnAliases          new         mberGroup { IsCompact = I            mpactColumnAliases, Region = "Alias m        bers" };
+		var nPKs           = t.Columns.            ues.Count(c => c.IsPrimaryKey);
+		var allNullable    = t.Columns.Values.All  (c => c.IsNullable || c.IsI        ntity);
+		var nameMaxLen        = t.        olumns.Values.Max  (c => (int?)(c.MemberName              c.ColumnName
+			? 0
+			: ToStringLiteral(c.ColumnName).        ength)) ?? 0;
+		var dbTypeMaxLen               t.Columns.Values.Max  (c => (int?)(c.Column        ype.Length)) ?? 0;
+		var dataTypeMaxLen             t.Columns.Values.Where(c => c.DataTyp                = null).Max  (c => (int?)(c.DataType.L        ngth)) ?? 0;
+		var dataTyp        Pr            ix = "LinqToDB.";
+
+		foreach (var c in t.Columns            alues)
+		{
+			// Column.
+			//
+		            ar ca = new Attribute("Column");
+		            ar canBeReplaced = true;
+
+			if (c.Mem            rName != c.ColumnName)
+			{
+				var columnNameInAtt                 ToStringLiteral(c.ColumnName);
+
+				var            pace = new string(' ', nameMaxLen - columnNameInAttr.Le                h);
+
+				ca.Parameters.Add(columnNameInAttr +             ace);
+				canBeReplaced = false            			}
+			else if (nameMaxLen > 0            			{
+				ca.Parameters.Add(new string(' ', nameMaxLen));
+				            nBeReplaced = false;
+			}
+
+			if (Genera            DbTypes)
+			{
+				var space = new string('                     dbTypeMaxLen - c.ColumnTy(proc.IsFunction && !proc.IsTableFunction)pe="                                                                     (proc.IsTableFunction &&
+                                                                                                                                                                                                          proc
+                                                                                                                                                                                                                  .ResultException !=
+                                                                                                                                                                                                          null)l                    d =            al                
+			}
+
+			if (GenerateDataTypes)
+			{
+				var space = new st                g(' ', dataTypeMaxLen - c.DataType.Length);
+				ca.Parameter                dd("DataType=" + dataTypePrefix + c.DataType + space);
+				ca                Replaced = false;
+			}
+
+			if (                erateDataTypes && !GenerateLengthProperty.HasValue || GenerateLengthProperty == true)
+			{
+	                if (c.Length    != n                )                     arameters.Add("Length="    +                     ength == Value ? "int.MaxValue".Length.ToString(                    
+				canBed = false;
+			}
+
+			enerateDataTypes                     GeneratePnProperty.HasValue || GeneratePrecisionProp                     == true)
+			{
+				if (c.Precision                 nu                 ca.Parameters.Add("Precision=" + c.Precision);
+	                canBeReplaced = fal
+			if (Generate                aTypes && !GenerateScaleProperty.HasValue ||                nerat
+			{
+				if (c.S                e     != null) ca.Parameters.Ad                Sc                    " + c.Scale);
+				canBeReplaced = false;
+			                    		if (c.Sk                nIn                t && !c.IsIdetity)
+			{
+				ca.Parameters.Add("SkipOnIns                =true");
+				canBeReplaced = false;
+		                
+			if (c.SkipOnUpdate && !c.IsIdentity)                	{                    	ca.Parameters.Add("SkipOnUpdate=tru                        				canBeReplaced = false;
+			}
+
+			if (c.IsDiscriminator)
+			{
+				ca.Par                    ers.A                        sDiscriminator=true");
+				canBeReplaced = false;
+			}
+
+			c.Attribute
+                                .Insert(0, ca);
+
+			// PK.
+		
+                                        //
+			if (c.IsPrimaryKey)
+			{
+				
+                                                ar pka = new Attribute("PrimaryKey
+                                                );
+
+				if (nPKs > 1)
+				                a.P                meters.Add(c.PrimaryKeyOrder.                    ring());
+
+				if (canBeReplaced)
+				                Attributes.Remove(ca);
+
+                    c.Attributes.Add(pka);
+
+				can                eplaced = false;
+			}
+                	// Identity.
+			//
+			                (c                    dentity)
+			{
+				var ida = new Attrib                    "Identity");
+
+	if (canBeReplaced)
+					c.Attribut.Remove(ca);
+
+				c.Attributes.A                    da);
+			}
+
+			// ullable.
+			//
+			if (c.IsNullable)
+				c.Attributes.Add(new Attribute                    lNullable ? "   ") + "Nullable"));
+			else if (.IsIdentity)
+				c.Attributes.                    new Attribute("NotNull"));
+
+			var columnComments = CeateXmlCommentFromText(c.Description                    			if (columnComments.Count > 0)
+				c.Comment.AddRange(colum                    ments);
+
+			// End line comment.
+			//
+			c.EndLineComment = c.ColumnType;
+
+	                    tPropertyValue(c, "IsNotifying", true);
+			SetPropertyValue(c, "                di                le",  true);
+
+			columns.Members                d(                    
+			// Alias.
+			//                    if (c.AliasName != nul                     c                                                                                sName != c.Member
+                                                                                        ame)
+			{
+				var caProp
+                                                                                                 = new Property(
+			                                                                                ypeBuilder,
+					c.AliasName,
+					()                     ew[                    c.MemberName },				() => new[] { c.MemberName + " = value;"})                    			caProp.Comment.
+                            ddRange(columnComments);
+
+				if (GenerateObsol
+                                    teAttributeForAliases)
+					caProp.Attributes.Add(new Attribute("Obsolete", T
+                                    StringLiteral("Use " + c.MemberName + " instead.")));
+
+				caProp.At                    utes.Add(new Attribute("ColumnAlias" , ToStringLiteral(c.MemberName)));
+
+				columnAlia
+                            es.Members.Add(caProp);
+			}
+		}
+
+		t.Membe
+                            s.Add(columns);
+                                    
+	", ArgIndices = new[] { " +
+    string.Join(", ", Enumerable.Range(0, p.ProcParameters.Count(pr => !pr.IsResult))) + " }"
+                                    nExtensions)                    
+			var keys = t.ForeignKeys.Values.ToList();
+
+	                        (!GenerateBackReferences)
+				keys = keys.Where(k => k.BackRefer                     != 
+                    ull).ToList();
+
+			if (keys.Count > 0)
+			{
+				var associations          = new MemberGroup { Reg                         "Associations" };
+				var extensionAssociations = new Membe                    up { Region = t.Name + " Associations"};
+
+				foreach (var key i                        s.OrderBy(k => k.MemberN
+                                ame))
+                                        				{
+					string otherTableName = null;
+
+					if (key.OtherTable.TableSch
+                                                ma.SchemaName != null)                    			otherTableName += ke                th                able.TableSchema.Schema                e                     ";
+					otheName +=                    .OtherTable.TaSchema.TableName;
+
+					key.Comment.Add("/ <summary>");
+					key.Comme                    dd($"/ {key.KeyNam
+                            } ({otherTableName})");
+					key.Comment.Add("/
+                                    </summary>");
+
+					if (key.AssociationType == AssociationType.OneToMany)
+			
+                                    		key.TypeBuilder = () => string.Format(OneToManyAssociationType, ke                    herTable.TypePrefix + key.OtherTable.TypeName);
+					else
+						key.TypeBuilder = () =>
+                            new ModelType(key.OtherTa                .T                Prefi                 k                    therTable.TName, tr                    key.CanBeNull).ToTypeName();
+
+					var aa =                             ttribute                            ociation");
+
+					aa.Parameters.                                    hisKey="   + ToStringLiteral(string.Join(                                    (from c in key.ThisColumns  select c.MemberName).T                    ay())));
+					aa.Parameters.Add("OtherKey="  + T                        ngLiteral(string.Join(",
+                                 ", (
+                                        rom c in key.OtherColumns select c.Membe
+                                                ame).ToArray())));
+					aa.Param
+                                                        ters.Add("CanBeNull="
+                                                        + (key.CanBeNull ? "tr                    : "fa                        );
+
+					key.Attributes.
+                                Add(a
+                                        );
+
+					SetPropertyValue(key, "IsN
+                                                tifying", true);
+					SetPropert
+                                                        Value(key, "IsEditabl
+                                                        ",  true);
+
+					assoc                ion                embers.Add(key);
+
+					var e                    sion = new Method(() => string.Format("IQueryable<{0}{1}>", key.OtherTable.TypePre                        key.OtherTable.TypeName)
+                                ,
+			
+                                        		GetAssociationExtensionPl
+                                                ralName(key))
+					{
+						Name     = GetAssociationExten
+                                                ionPluralName(key),
+						IsStatic = true
+	                	};
+
+					extension.Par                te                    lders.Add(() => string.Format("                     {                         obj", t.TypePrefix, t.TypeName));
+
+					extension.ParameterBuilders.Add(() => "IDataContext db
+                                );
+					extension.Attributes.Add(aa);
+
+					extension.Comment.Add("/ <summary>");
+                                					extension.Comment.Add("/ " + key.KeyN                    ;
+			                    tension.Comment.Add("/ </summary>");
+
+					Func<string>                    ld                        () =>
+					{
+                        	var sb = new Strin
+                                gBuil
+                                        er(;
+
+                                        	
+                                            				sb
+							.Append("return db.GetTable<
+                                            )
+							.Append(key.OtherTable.TypePrefix + k
+                                        y.Ot                    ab                Ty                ame)
+							.Append(">(                he                     => ");
+						for (var i = 0 i < key.OtherColumns.Count; i++)
+						{
+							s                pp                ("c."                		                    	.Append(key.                            Columns[i].MemberName)
+					                                    pend(" == obj.")
+				                                    ppend(key.ThisColumns[i].MemberName)
+								.Append(" && ");
+						}
+						sb
+                                            Length -= 4;
+						sb.Append(");");
+
+						                                     sb.ToString();
+					};
+
+					extension.BodyBuilde                                    (() =>                                     { builder() });
+
+					extens                                    sociations.Memb                    Add(extension);
+
+					if (key.Assoc                    onType != Associatio.OneToMany)
+					{
+						var single = ne(t.TypePre                    + t.TypeName, true, kanBeNull).ToTypeName(), GetAssociationExtensionSingularN						sing                    arameterBuilders.Add(() => string.Format("this {0}{1} obj", key.therTable.TypePrefix, key.OtherTable.Ty                    me));
+
+						single.P                    eterBuilde.Add((                     "IDataContext db");
+						single.Attributes.Add(aa);
+						sing                        Static = true;
+
+						single                    ment.Add("/ <summary>");
+						single.Comment.Add("/ " + key.KeyNa                    
+						single.Comment.Add("/ </summary>");
+
+						Func<string                    ilderSingle =                    =>
+						{
+							var sb = new StringB                    er();
+	
+                            						sb
+								.Append("return db.GetTable<")
+								.Append(t.
+                                    TypePrefix + t.TypeName)
+								.Append(">().Wh                         => ");
+							for (var i = 0; i < key.OtherColumns.Count; i                    							{
+								sb.Append("c.")
+									.Append(key.ThisColumns.MemberName)
+	                    				.Append(" ==obj.")
+									.Append(key.OtherColumns[i].MemberName)
+									                    end(" && ");
+					}
+							sb.Length -= 4;
+							sb.Append(");");
+
+							return sb.ToString();
+				                    
+
+						single.BodyBuilders.Add(() =                    		                        						var sb = new String                        er                                                                                                                                                                               erS
+                                                                                                                                                                                       ngle
+                                                                                                                                                                                               )
+                                                                                                                                                                                               ;
+						
+                                                                                                                                                                                                       	
+                                                                                                                                                                                                               sb.Len
+                                                                                                                                                                                                               g
+                                                                                                                                                                                                       th -                                                                                                                                                                               				
+                                                                                                                                                                                       			i
+                                                                                                                                                                                       f (key.
+                                                                                                                                                                                               CanBeNu
+                                                                                                                                                                                               ll)
+								sb.Appen
+                                                                                                                                                                                                       (".FirstOrDefault();"                                                                                                                                                                               				
+                                                                                                                                                                                       else
+                                                                                                                                                                                       
+							                                                                                                                                                                               pen
+                                                                                                                                                                                       (
+                                                                                                                                                                                       ".F
+                                                                                                                                                                                               r
+                                                                                                                                                                                                       t
+                                                                                                                                                                                                       );
+                                                                                                                                                                                       );
+
+                                                                                                                                                                                       							return new []
+                                                                                                                                                                                                { sb.T
+                                                                                                                                                                                       S
+                                                                                                                                                                                               trin                                                                                                                                                                               
+	                                                                                                                                                                                   ;
+
+
+                                                                                                                                                                                           		
+                                                                                                                                                                                                   A
+                                                                                                                                                                                                   sociations.Members.A
+                                                                                                                                                                                                           d
+                                                                                                                                                                                                                   d
+                                                                                                                                                                                                           (si                                                                                                                                                                                   			
+                                                                                                                                                                                           	}
+				}
+
+			
+                                                                                                                                                                                                   i
+                                                                                                                                                                                                    (
+                                                                                                                                                                                                           Generate
+                                                                                                                                                                                                   sso
+                                                                                                                                                                                                           ciations)
+                                                                                                                                                                                                    		
+                                                                                                                                                                                                            			t.Members.                                                                                                                                                                                   oci
+                                                                                                                                                                                           tions);
+				if (G
+                                                                                                                                                                                                   n
+                                                                                                                                                                                                   rateAsso
+                                                                                                                                                                                                           c
+                                                                                                                                                                                                                   iatio
+                                                                                                                                                                                                                           n
+                                                                                                                                                                                                                                   Extensi
+                                                                                                                                                                                                                                   ns)
+		
+                                                                                                                                                                                                                                   	
+                                                                                                                                                                                                                   	
+                                                                                                                                                                                                           	ass                                                                                                                                                                                   nE
+                                                                                                                                                                                           t
+                                                                                                                                                                                           ensions.Members.Add(ext
+                                                                                                                                                                                                   ension                                                                                                                                                                                       ions);
+			}
+		}
+
+
+                                                                                                                                                                                               		if
+                                                                                                                                                                                                (Gene
+                                                                                                                                                                                                       rateFin
+                                                                                                                                                                                                       dExtension
+                                                                                                                                                                                                                && nPKs > 0)
+	
+                                                                                                                                                                                                                       	{
+
+                                                                                                                                                                                                                               			var PKs                                                                                                                                                                                          ol
+                                                                                                                                                                                           m
+                                                                                                                                                                                           ns
+                                                                                                                                                                                                   .Values.W
+                                                                                                                                                                                           er
+                                                                                                                                                                                                   e(c => c.Is                                                                                                                                                                                       ey).ToList();
+			
+                                                                                                                                                                                               var 
+                                                                                                                                                                                               maxNam
+                                                                                                                                                                                                       eLen1 =
+                                                                                                                                                                                                        PKs.Max(c =>
+                                                                                                                                                                                                               (i
+                                                                                                                                                                                                                       nt?)c
+                                                                                                                                                                                                                       MemberName.Length) ?? 0;
+			var ma
+                                                                                                                                                                                                                       Napr
+                                                                                                                                                                                                                               .IsResult
+                                                                                                                                                                                                                               ? "ParameterDirection.ReturnValue"
+                                                                                                                                                                                                                               : "ParameterDirection.Output"eExte                                                                                                                                                                                   Me
+                                                                                                                                                                                           b
+                                                                                                                                                                                           er
+                                                                                                                                                                                                   s.Add(
+	
+                                                                                                                                                                                           		new M
+                                                                                                                                                                                           th
+                                                                                                                                                                                                   od(
+	
+                                                                                                                                                                                                   				() =>
+                                                                                                                                                                                           new 
+                                                                                                                                                                                           od
+                                                                                                                                                                                                   elTyp
+                                                                                                                                                                                                   e(t.TypeN
+                                                                                                                                                                                           me,
+                                                                                                                                                                                                    true, true)
+                                                                                                                                                                                           To
+                                                                                                                                                                                                   TypeN
+                                                                                                                                                                                                   ame(),
+		
+                                                                                                                                                                                           		"
+                                                                                                                                                                                                   Find",
+				                                                                                                                                                                                       c<string>[] { () 
+                                                                                                                                                                                               => s
+                                                                                                                                                                                               tring.
+                                                                                                                                                                                                       Format(
+                                                                                                                                                                                                       "this IT
+                                                                                                                                                                                                               bl
+                                                                                                                                                                                                                       e<{0}
+                                                                                                                                                                                                                       > tabl
+                                                                                                                                                                                                                       e", t.Typ
+                                                                                                                                                                                                                       eName) }
+			
+                                                                                                                                                                                                                               			.Union(PKs.Select(c                                                                                                                                                                                    c<s
+                                                                                                                                                                                           ring>)(
+                                                                                                                                                                                                   )
+                                                                                                                                                                                                   => 
+                                                                                                                                                                                                   .BuildType() + " " +
+                                                                                                                                                                                                            c.Membe
+                                                                                                                                                                                                   Name
+                                                                                                                                                                                                   )),
+					() => ne
+                                                                                                                                                                                                           w[] { "re
+                                                                                                                                                                                                   u
+                                                                                                                                                                                                           n tab
+                                                                                                                                                                                                           e.First                                                                                                                                                                                   lt
+                                                                                                                                                                                           t
+                                                                                                                                                                                            =>" }
+						.U                                                                                                                                                                                       .Sel
+                                                                                                                                                                                               ectM
+                                                                                                                                                                                               any((c,
+                                                                                                                                                                                                       i) =>
+	
+                                                                                                                                                                                                       		                                                                                                                                                                                                               			var ss = new List<string>();
+
+							if (c.C                                                                                                                                                                                                               l != null)
+				
+                                                                                                                                                                                                                       			
+                                                                                                                                                                                                                               	ss.Add("#if "                                                                                                                                                                                                               itional
+                                                                                                                                                                                                                       );
+
+							ss.
+                                                                                                                                                                                                                               dd
+                                                                                                                                                                                                                                       (BuildColumnCo                                                                                                                                                                                                               c,
+                                                                                                                                                                                                                        LenDiff(maxName                                                                                                                                                                                                               emberNa
+                                                                                                                                                                                                                       me), LenDiff(
+                                                                                                                                                                                                                               ax
+                                                                                                                                                                                                                                       NameLen2, c.Membe                                                                                                                                                                                                                == nPKs - 1));
+
+					
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                       	i
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                               f (c.Condit                                                                                                                                                                                                               null)
+					                                                                                                                                                                                   					                                                                                                                                                                                       ].En
+                                                                                                                                                                                               dsWi
+                                                                                                                                                                                               th(");"
+                                                                                                                                                                                                       ))
+				
+                                                                                                                                                                                                       		                                                                                                                                                                                                               				ss[1] = ss[1].Substring(0, ss[1].Length -                                                                                                                                                                                                               					ss.Add("#e
+                                                                                                                                                                                                                       ndi
+                                                                                                                                                                                                                               f");
+									                                                                                                                                                                                                               t\t);")
+                                                                                                                                                                                                                       ;
+								}
+	
+                                                                                                                                                                                                                               		
+                                                                                                                                                                                                                                       				else
+								                                                                                                                                                                                                               		ss.Add("#endif");
+		
+                                                                                                                                                                                                                                               		
+                                                                                                                                                                                                                                                       			}
+						                                                                                                                                                                                                               		return ss;                                                                                                                                                                                   })
+                                                                                                                                                                                           )
+                                                                                                                                                                                           
+				{
+					IsSta
+                                                                                                                                                                                                   tic = tr
+                                                                                                                                                                                           e
+	                                                                                                                                                                                   		                                                                                                                                                                                       Type
+                                                                                                                                                                                               (t);
+                                                                                                                                                                                               
+
+		if (!s                                                                                                                                                                                       Nul
+                                                                                                                                                                                               OrWhiteSpace(t.Al
+                                                                                                                                                                                                       a
+                                                                                                                                                                                                       TypeName))
+		{
+		
+                                                                                                                                                                                                               	var aC
+                                                                                                                                                                                                               las
+                                                                                                                                                                                                                        =
+                                                                                                                                                                                                                       ne
+                                                                                                                                                                                                                               w Clas
+                                                                                                                                                                                                                               s(t.Alia
+                                                                                                                                                                                                               sTyp
+                                                                                                                                                                                                               eName                                                                                                                                                                                       			
+                                                                                                                                                                                               a
+                                                                                                                                                                                               seC
+                                                                                                                                                                                                       a
+                                                                                                                                                                                                               s
+                                                                                                                                                                                                               = 
+                                                                                                                                                                                               .Ty
+                                                                                                                                                                                               eName
+			};
+
+			i
+                                                                                                                                                                                                       f (comm
+                                                                                                                                                                                               n
+                                                                                                                                                                                                       ts.C                                                                                                                                                                                           
+			
+                                                                                                                                                                                                   	aCl
+                                                                                                                                                                                                   ass.Com
+                                                                                                                                                                                                           ment.Ad
+                                                                                                                                                                                                           dR                                                                                                                                                                                                                   nts);
+
+			if (GenerateO                                                                                                                                                                                                                   ributeForAliases)
+                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                   	
+                                                                                                                                                                                                                           	
+                                                                                                                                                                                                                           		aClass                                                                                                                                                                                                                   s.Add(n
+                                                                                                                                                                                                                           ew Attribute("Obsol
+                                                                                                                                                                                                                                   te", ToStringLite
+                                                                                                                                                                                                                                           r
+                                                                                                                                                                                                                                                   a
+                                                                                                                                                                                                                                           l
+                                                                                                                                                                                                                                           ("Use " +                                                                                                                                                                                                                   e + " instead."))
+                                                                                                                                                                                                                           )
+                                                                                                                                                                                                                                   ;
+                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                           
+			Mode                                                                                                                                                                                                                   d(a
+                                                                                                                                                                                                                                   lass);
+		}
+	}
+
+	i
+                                                                                                                                                                                                                                           f (assoc
+                                                                                                                                                                                                                                   a
+                                                                                                                                                                                                                           ionEx
+                                                                                                                                                                                                                           ensions.M                                                                                                                                                                                       ount
+                                                                                                                                                                                                > 0
+                                                                                                                                                                                               )
+		
+                                                                                                                                                                                                efTableExtensions.Me
+                                                                                                                                                                                                        mbers.Ad
+                                                                                                                                                                                                (
+                                                                                                                                                                                                       ssociati
+                                                                                                                                                                                                       nExtension                                                                                                                                                                                   f                                                                                                                                                                                ias                                                                                                                                                                               bers
+                                                                                                                                                                                       .Cou
+                                                                                                                                                                                       nt > 0)
+                                                                                                                                                                               Cont
+                                                                                                                                                                                       extO
+                                                                                                                                                                                       bject.M                                                                                                                                                                               .Add(d
+                                                                                                                                                                                       fAlias                        
+	fo                    h (                    schema in schemas.Values)
+		if (schema.Aliases.Members.Count > 0)
+			schema.Type.Memb                    Add(defAliases);
+
+	if (Procedures.Count > 0)
+	{
+		Model.Usings.Add("System.Collections.Generic");
+		Model.Usings.Add("System.Data"                    	Model.Usings.Add("LinqToDB.Data");
+		Model.Usings.Add("LinqToDB.Common");
+
+		if 
+                                                                              Procedures.Values.Any
+                            p => p.IsTableF
+                            nction))
+                    odel.Usings.Add("System.Reflection")                        if (Procedures.Values.Any(p => p.IsAggregateFunction))
+			Model.Usings.Ad                    ystem.Linq.Expressions");
+
+                         procs = new MemberGroup();
+	var funcs = new MemberGroup();
+		var tabfs = new MemberGroup { Region                    Table                    ct                         };
+
+		var currentContext = DataContextObject;
+		foreach (var p i                        ce                            Values.Where(
+			proc => pro.Is                             |                                IsFunction && !proc.IsTableFunction ||
+			                                Tabl                                on && proc.ResultException != null
+			))
+		{
+			Act                                berGroup> addProcs = tp => procs.Me                                dd(tp)                            ction                            rGroups = t                            uncs.Members.Add(tp);
+			Action<MemberGroup> addTabfs = tp => tabfs.Membes.Add(tp);
+
+			                            isDataContext = "this";
+
+			var schema = p.Schema != null && schemas.ContainsKey(p.Schema)                            emas[p.Schema] : null;
+
+			if (schema != null)
+	                            		                                = schemas[p.Schema];
+
+				adPro                                                                       si.Procedures.                                            rs.Add(tp);
+				addFuncs        = tp => si.Functions.     Members.Add(tp);
+			                                                    = tp =                                            eFunctions.Members.Add(tp);
+				thi                                            ext = "_dataCon                                            	}
+
+			var proc = new MemberGroup {                                             p.Nam                                		if                            sFu                            )          addProcs(proc);
+		els e if (p.IsTableFunction) addTabfs(proc)                        el                                                                                      addFuncs(proc);
+
+                                    
+			i
+                                             (pRe
+                                            u
+                                                tException != null)
+			{
+				proc.Errors.Add(p.ResultException.Message
+                                                ;
+				continue;
+			
+                                            
+
+		                        co                    ts                     reateXmlComm                    ro                        (p.Description);
+			List<string> returnsComments = null;
+
+			fach (varam in                         cParameters)			{
+				if (param.IsResult && p.IsFunction)
+					returnsCnts = Cr                        mlCommentFrText(param.Description, "returns");
+				else
+					comments.AddRange(Cre                        lCommentFromText(param.Descrption, "param", string.                        t("name=\"{0}\"", param.ParameterName.StartsWith("@") ? param.Parameter                        Su                            g(1) : param.ParameterName));
+	                            		                                urnsComments !=                                        			comments.AddRange(returnsComments);
+
+			if (comments.Coun                                        			p.Comment.AddRa                                        ents);
+
+			proc.Membes.Add(p);
+
+			if (p                                        Function)
+			{
+				var                                        trs = new List<string>();
+
+				if (ServerNa                                         null) tableAttrs.A                                        er="   + ToStringLiteral(ServerNam                            			i                        tab                        me  != null) tableAttrs.Add(Data base=" + ToStringLiteral(DatabaseN                    );                		i                p.Schema      != null) tableAttrs.Add("Schema="   + ToStringLiteral(p.Schema                
+	                    f (p.PackageName != null) tableAttrs.Add("Package="                      StringLiteral(p.PackageName));
+
+				tableAttrs.A                    Na                        + ToStringLiteral(p.ProcedureName)                            		p.Attributes.Add(new Attribute("Sql.TableFunction", tableAttrs.ToArray()));
+
+				p.TypeBuild                        () => "ITable<" + p.Resu                    ble                    eName + ">";
+			}
+			else if (p.IsAg                    ateFunction)
+			{
+				p.IsStatic                 ru            
+		            p.TypeBuilder = () =>
+				{
+	                	var resultParam = p.ProcParameters.Single(pr => pr.IsResult);
+					return resultParam.Type.ToTypeNam            );
+				};
+				var paramCount                  p.ProcParameters.Count(pr => !pr.IsResult);
+				var functionName = SqlB            lder.BuildObjectName(new Stri                uilder(), new SqlObjectName(p.Procedure            me, Schema: p.Schema, Package: p.PackageName), ConvertType.NameToProcedure, true, Table            tions.NotSet).ToString();
+				p.Attributes.Add            ew Attribute("Sql.Function", "Name=" + ToStringLit                l(functionName), "ServerSideOnly
+                        true, IsAggregate  true" + (paramCount > 0 ? (", ArgIndices = new[] { " + string.Join(", ",             umerable.Range(0, p.ProcParameters.Coun            pr                 !pr.IsResult))) + " }") : null)));
+
+				                    p.IsDefaultSchema || !GenerateSchemaAsType)
+					p.ParameterBuilders.Add(() => "this IEnumerable<
+                    S
+                        urce> src");
+		
+                    	else                 otherwise function will be generated in                    ted class, which doesn't support extension methods
+					p.ParameterBuilders.Add(() => "IEnu                able<TSource> src");
+
+				foreach (var inp in                    rocParameters.Where(pr => !pr.IsResult))
+					p.Paramete                ilders.Add(() => string.Format("Expression<Func<TSource, {0}>> {1}", inp.Type.ToTypeName                 inp.ParameterName));
+
+				p.Name += "<TSource>";
+			}
+			                     if (p.IsFunction)
+			{
+				p.IsSt            ic                     = true;
+				p.TypeBuilder    = () => p.P        oc            rameters.Single(pr => pr.IsResult            Type.ToTypeName();
+				var functionName = SqlBuilder.BuildObjectName(new StringBuilder(), ne            SqlObjectName(p.ProcedureName, Sch            a: p.Schema, Package: p.PackageName), ConvertType.NameToProcedre, true, TableOptions.NotSet).To        tri        g();
+				p.Attributes.Add(new Attribute        "S            .Function", "Name=" + ToStringL            eral(functionName), "ServerSideOnly=true"));
+	            }
+                else
+			{
+				p.IsStatic    = tru                				p.TypeBuilder = () => p.ResultTable == null
+	            		         "i        t"
+				eneratePr        cedureResultAsList
+		        			? "List<" + p.R        sultTable.TypeName + ">"
+						:     private "IEnumerable<" + p.ResultTable.TypeName + ">";
+
+				if (p.IsDefaultSchema || !GenerateSchemaAsType)
+					p    .P        rameterBuilders.Add(() > string.Format("t        is {0} dataConnection",  GenerateProceduresOnTypedConte             ? currentContext.Name : "DataConnection"));
+				else
+					p.Par        meterBuilders.Add(() => string.Format("{0} dataConnection", GenerateProceduresOnTypedContext ? curren    tCo    private ntext.Name : "DataConnection"));
+			}
+
+			if (!p.IsAggregateFunction)
+				foreach 
+            var pr in p.ProcParameters.Wher    e(        ar => !par.IsResult || !p.IsFunction))
+                			p.Para                terBuilders.Add                ) =>
+                        string.For
+                                at("{0}{1} {2}", pr.IsOut || pr
+                                   IsResult ? pr.IsIn ? "ref " : "out " : "", pr.Type.ToTypeName(), pr.Pa
+                                   ameterName));
+
+			if (p.IsTa
+                                        leFunction)
+			{
+				p.Bo
+                                        yBuilders.Add(() => new[]
+                                		m is TypeBase ? ((TypeBase)m).Name : ((MemberBase)m).Nameho                nfo)MethodBase.GetC                re                                                                                                                                                          et
+                                                                                                                                                                  o
+                                                                                                                                                                  d
+                                                                                                                                                                          ){
+                                                                                                                                                                          }{3}", thi                                                                                                                                                              aC
+                                                                                                                                                                      ontext, 
+                                                                                                                                                                      p
+                                                                                                                                                                      .R
+                                                                                                                                                                      esult
+                                                                                                                                                                      a
+                                                                                                                                                                      le.TypeNa                                                                                                                                                           Enab                                                                                                                                                              ll
+                                                                                                                                                                      ableRefere
+                                                                                                                                                                      n
+                                                                                                                                                                      ce
+                                                                                                                                                                      Types
+                                                                                                                                                                      ?
+                                                                                                                                                                      "!" : "",                .Pr                Parameters.Cou    nt     private == 0 ? ");" : ",")
+				});
+
+				for (var idx = 0; idx < p.ProcParameters.Count;
+            idx++)
+				{
+					var i = idx;
+    		        		p.BodyBuilders.Add(() => new [        {             t" + p.ProcParameters[i].Pa                eterName + (i + 1 == p.ProcParameters.Count ? ");" : ",") });
+				}
+			}
+			else if                     sFunction)
+			{
+            		p.BodyBuilders.Add(() => new [] { "thro            new  nval
+                    idOperationException(
+                      ;" });
+			}
+			else
+			{
+				var spName 
+                       
+					SqlBuilder.BuildObjectName(
+						new StringBuilder(),
+						new SqlOb                tName(p.ProcedureName         S    erver: ServerName, Database: DatabaseName, Schema:     p.Schema, Package: p.PackageName),
+						LinqT    oD        .SqlProvider.ConvertType.NameT    oPr    private ocedure,
+						true,
+						LinqToDB.TableOptions.NotSet
+					).ToString();
+
+				spName = ToStringLite    ra        (spName);
+
+				var inputParameters             = p.ProcParameters.Where(pp => pp.I        In                                        ToList();
+				var outputParameters     = p.ProcParameters.Where(pp            > pp.IsOut || pp.IsResult).                            ist();
+				var inOrOutput                        meters = p.ProcParamete                        here(pp => pp.IsIn  ||                        IsOut || pp.IsResult).                        st();
+
+				var retName =                         ";
+				var retNo   = 0;
+                        	while (p.Pro            arameters.Any(pp => pp.ParameterName == retNam        ))
+        				retName = "re    t"+ ++retN    oprivate;
+
+				var hasOut = outputParameters.Any(pr => pr.IsOut || pr.IsRe    su        t);
+				var prefix = hasOut ? "var " + retName + " = " : "return ";
+
+				var cnt = 0;
+		    		v    ar paramprivateetersVarName = "parameters";
+				while (p.ProcParameters.Where(p    ar        => !par.IsResult || !p.IsFunction).Any(par                > par.ParameterName == parametersVarName))
+					parametersVarName = string.Format("parameters{0}", cnt++);
+
+				var maxLenSche                 = inputParameters.Max(pr => (int?)pr.Sche    maN    ame.   Length) private?? 0;
+				var maxLenParam      =         nputParameters.Max(pr => (int?)pr.ParameterName.Length) ?? 0        
+				var maxLenType   = inputP    ara    meters.Max(pr => (int?private)("LinqToDB.DataType." +     pr        DataType).Length) ?? 0;
+
+				if (inOrOutputParameters.Coun         > 0)
+				{
+					p.BodyBuilder    s.Add(() =>
+					{
+						var code = new List<string>();
+						code.Add(string.Format("var {0} = new []", parametersVarName));
+						code.Add("{");
+
+						for (var i = 0; i < inOrOutputParameters.Count; i++)
+						{
+							var pr            = inOrOutputParameters[i];
+							var hasInputValue = pr.IsIn || (pr.IsOut && pr.IsResult);
+
+							var extraInitializers = new List<Tuple<string, string>>();
+							if (GenerateProcedureDbType(pr))
+								extraInitializers.Add(Tuple.Create("DbType", ToStringLiteral(pr.SchemaType)));
+
+							if (pr.IsOut || pr.IsResult)
+								extraInitializers.Add(Tuple.Create("Direction", pr.IsIn ? "ParameterDirection.InputOutput" : (pr.IsResult ? "ParameterDirection.ReturnValue" : "ParameterDirection.Output")));
+
+							if (pr.Size != null && pr.Sze.Value != 0 && pr.Size.Value >= int.MinValue && pr.Size.Value <= int.MaxValue)
+								extraInitializers.Add(Tuple.Create("Size", pr.Size.Value.ToString(CultureInfo.InvariantCulture)));
+
+							var endLine = i < inOrOutputParameters.Count - 1 && extraInitializers.Count == 0 ? "," : "";
+
+							if (hasInputValue)
+								code.Add(string.Format(
+									"\tnew DataParameter({0}, {1}{2}, {3}{4}){5}",
+									ToStringLiteral(pr.SchemaName),
+									LenDiff(maxLenSchema, pr.SchemaName),
+									pr.ParameterName,
+									LenDiff(maxLenParam, pr.ParameterName),
+									"LinqToDB.DataType." + pr.DataType,
+									endLine));
+							else
+								code.Add(string.Format(
+									"\tnew DataParameter({0}, null, {1}{2}){3}",
+									ToStringLiteral(pr.SchemaName),
+									LenDiff(maxLenParam, pr.ParameterName),
+									"LinqToDB.DataType." + pr.DataType,
+									endLine));
+
+							if (extraInitializers.Count > 0)
+							{
+								code.Add("\t{");
+
+								var maxPropertyLength = extraInitializers.Select(ei => ei.Item1.Length).Max();
+
+								for (var j = 0; j < extraInitializers.Count; j++)
+									code.Add(string.Format(
+										"\t\t{0}{1} = {2}{3}",
+										extraInitializers[j].Item1,
+										LenDiff(maxPropertyLength, extraInitializers[j].Item1),
+										extraInitializers[j].Item2,
+										j < extraInitializers.Count - 1 ? "," : ""));
+
+								code.Add(i < inOrOutputParameters.Count - 1 ? "\t}," : "\t}");
+							}
+						}
+
+						code.Add("};");
+						code.Add("");
+						return code;
+					});
+				}
+
+				// we need to call ToList(), because otherwie output parameters will not be updated
+				// with values. See https://docs.microsoft.com/en-us/previous-versions/dotnet/articles/ms971497(v=msdn.10)#capturing-the-gazoutas
+				var terminator = (GenerateProcedureResultAsList || outputParameters.Count > 0) && p.ResultTable != null ? ").ToList();" : ");";
+
+				if (inOrOutputParameters.Count > 0)
+					terminator = string.Format(", {0}{1}", parametersVarName, terminator);
+
+
+				if (p.ResultTable == null)
+					p.BodyBuilders.Add(() => new [] { prefix + "dataConnection.ExecuteProc(" + spName + terminator });
+				else
+				{
+					if (p.ResultTable.Columns.Values.Any(c => c.IsDuplicateOrEmpty))
+					{
+						p.BodyBuilders.Add(() => new []
+						{
+							"var ms = dataConnection.MappingSchema;",
+							"",
+							prefix + "dataConnection.QueryProc(dataReader =>",
+							"\tnew " + p.ResultTable.TypeName,
+							"\t{"
+						});
+
+						var n          = 0;
+						var maxNameLen = p.ResultTable.Columns.Values.Max(c => (int?)c.MemberName .Length) ?? 0;
+						var maxTypeLen = p.ResultTable.Columns.Values.Max(c => (int?)c.BuildType().Length) ?? 0;
+
+						foreach (var c in p.ResultTable.Columns.Values)
+						{
+							p.BodyBuilders.Add(() => new []
+							{
+								string.Format(
+									"\t\t{0}{1} = Converter.ChangeTypeTo<{2}>{3}(dataReader.GetValue({4}), ms),",
+									c.MemberName,
+									LenDiff(maxNameLen, c.MemberName),
+									c.BuildType(),
+									LenDiff(maxTypeLen, c.BuildType()),
+									n++)
+							});
+						}
+
+						p.BodyBuilders.Add(() => new [] {"\t},", "\t" + spName + terminator });
+					}
+					else
+					{
+						p.BodyBuilders.Add(() => new [] { prefix + "dataConnection.QueryProc<" + p.ResultTable.TypeName + ">(" + spName + terminator });
+					}
+				}
+
+				if (hasOut)
+				{
+					maxLenSchema = outputParameters.Max(pr => (int?)pr.SchemaName.   Length    ) ?? 0;
+					maxLenParam  = outputParameters.Max(pr => (int?)pr.ParameterName.Length    ) ?? 0;
+					maxLenType   = outputParameters.Max(pr => (int?)pr.Type.ToTypeName().Length) ?? 0;
+
+					p.BodyBuilders.Add(() => new [] { string.Empty });
+
+					foreach (var pr in p.ProcParameters.Where(_ => _.IsOut || _.IsResult))
+					{
+						p.BodyBuilders.Add(() => new []
+						{
+							string.Format(
+								"{0} {1}= Converter.ChangeTypeTo<{2}>{3}({4}[{5}].Value);",
+								pr.ParameterName,
+								LenDiff(maxLenParam,  pr.ParameterName),
+								pr.Type.ToTypeName(),
+								LenDiff(maxLenType, pr.Type.ToTypeName()),
+								parametersVarName,
+								inOrOutputParameters.IndexOf(pr))
+						});
+					}
+
+					p.BodyBuilders.Add(() => new [] {"", "return " + retName + ";" });
+				}
+			}
+
+			if (p.ResultTable != null && p.ResultTable.DataContextPropertyName == null)
+			{
+				var columns = new MemberGroup { IsCompact = true };
+
+				foreach (var c in p.ResultTable.Columns.Values)
+				{
+					if (c.MemberName != c.ColumnName)
+						c.Attributes.Add(new Attribute("Column") { Parameters = { ToStringLiteral(c.ColumnName) } });
+					columns.Members.Add(c);
+				}
+
+				p.ResultTable.Members.Add(columns);
+				proc.Members.Add(p.ResultTable);
+			}
+		}
+
+		if (procs.Members.Count > 0)
+			Model.Types.Add(new Class(DataContextObject.Name + "StoredProcedures", procs) { IsStatic = true });
+
+		if (funcs.Members.Count > 0)
+			Model.Types.Add(new Class("SqlFunctions", funcs) { IsStatic = true });
+
+		if (tabfs.Members.Count > 0)
+			DataContextObject.Members.Add(tabfs);
+
+		MakeTypeMembersNamesUnique(DataContextObject, "InitDataContext", "InitMappingSchema");
+		MakeMembersNamesUnique(Model.Types, "Table");
+		foreach (var type in Model.Types.OfType<Class>())
+			MakeTypeMembersNamesUnique(type, exceptMethods: new [] { "FreeTextTable", "Find", "InitDataContext", "InitMappingSchema" });
+
+		foreach (var schema in schemas.Values)
+		{
+			if (schema.Procedures.Members.Count > 0)
+				schema.Type.Members.Add(new Class(DataContextObject.Name + "StoredProcedures", schema.Procedures) { IsStatic = true });
+
+			if (schema.Functions.Members.Count > 0)
+				schema.Type.Members.Add(new Class("SqlFunctions", schema.Functions) { IsStatic = true });
+
+			if (schema.TableFunctions.Members.Count > 0)
+				schema.DataContext.Members.Add(schema.TableFunctions);
+
+			MakeTypeMembersNamesUnique(schema.DataContext, "InitDataContext", "InitMappingSchema");
+			foreach (var type in schema.Type.Members.OfType<Class>())
+				MakeTypeMembersNamesUnique(type);
+		}
+	}
+
+	if (defTableExtensions.Members.Count > 0)
+	{
+		Model.Usings.Add("System.Linq");
+		var tableExtensions = new Class("TableExtensions", defTableExtensions) { IsStatic = true };
+		Model.Types.Add(tableExtensions);
+		MakeTypeMembersNamesUnique(tableExtensions, exceptMethods: new [] { "Find", "FreeTextTable" });
+	}
+
+	foreach (var schema in schemas.Values)
+	{
+		Model.Types.Add(schema.Type);
+
+		if (schema.TableExtensions.Members.Count > 0)
+		{
+			Model.Usings.Add("System.Linq");
+			schema.Type.Members.Add(schema.TableExtensions);
+		}
+	}
+
+	Tables.    Clear();
+	Procedures.Clear();
+
+	Model.SetTree();
+
+	AfterGenerateLinqToDBModel();
+}
+
+void MakeTypeMembersNamesUnique(Class type, string defaultName = "Member", params string[] exceptMethods)
+{
+	var reservedNames = new [] { type.Name };
+	if (exceptMethods != null && exceptMethods.Length > 0)
+		reservedNames = reservedNames.Concat(exceptMethods).ToArray();
+
+	MakeMembersNamesUnique(GetAllClassMembers(type.Members, exceptMethods), defaultName, reservedNames);
+}
+
+void MakeMembersNamesUnique(IEnumerable<IClassMember> members, string defaultName, params string[] reservedNames)
+{
+	LinqToDB.Common.Utils.MakeUniqueNames(
+		members,
+		reservedNames,
+		m => m is Table ? (((Table)m).Schema != null && (PrefixTableMappingForDefaultSchema || !((Table)m).IsDefaultSchema) && PrefixTableMappingWithSchema ? ((Table)m).Schema + "_" : null) + ((Table)m).Name : (m is TypeBase ? ((TypeBase)m).Name : ((MemberBase)m).Name),
+		(m, newName, _) =>
+		{
+			if (m is TypeBase)
+				((TypeBase)m).Name = newName;
+			else
+				((MemberBase)m).Name = newName;
+		},
+		defaultName);
+}
+
+IEnumerable<IClassMember> GetAllClassMembers(IEnumerable<IClassMember> members, params string[] exceptMethods)
+{
+	foreach (var member in members)
+	{
+		if (member is MemberGroup)
+			foreach (var m in GetAllClassMembers(((MemberGroup)member).Members, exceptMethods))
+				yield return m;
+		// constructors don't have own type/flag
+		else if (!(member is Method && (((Method)member).BuildType() == null || (exceptMethods != null && exceptMethods.Contains(((Method)member).Name)))))
+			yield return member;
+	}
+}
+
+// unused: left for backward API compatibility
+public string NormalizeStringName(string name)
+{
+	return ToStringLiteral(name);
+}
+
+List<string> CreateXmlCommentFromText(string text, string tag = "summary", string attributes = null)
+{
+	var comments = new List<string>();
+
+	if (!string.IsNullOrWhiteSpace(text))
+	{
+		comments.Add(string.Format("/ <{0}{1}>", tag, attributes == null ? null : " " + attributes));
+		foreach (var line in text.Split('\n'))
+			comments.Add("/ " + line
+				.Replace("&", "&amp;")
+				.Replace("<", "&lt;")
+				.Replace(">", "&gt;")
+				.Replace("\"", "&quot;")
+				.Replace("'", "&apos;")
+				.TrimEnd());
+		comments.Add(string.Format("/ </{0}>", tag));
+	}
+
+	return comments;
+}
+
+#>

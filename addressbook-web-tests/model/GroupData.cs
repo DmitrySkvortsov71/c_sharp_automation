@@ -1,17 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using LinqToDB.Mapping;
 
 namespace WebAddressbookTests
 {
+  [Table(Name = "group_list")]
   public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
   {
-    private string header = "";
-    private string footer = "";
-
     public GroupData(string name)
     {
       Name = name;
-      Header = header;
-      Footer = footer;
     }
 
     /// for group data generators\xml serializers
@@ -19,12 +18,15 @@ namespace WebAddressbookTests
     {
     }
 
-    public string Name { get; set; }
+    [Column(Name = "group_name")] public string Name { get; set; }
 
-    public string Header { get; set; }
+    [Column(Name = "group_header")] public string Header { get; set; }
 
-    public string Footer { get; set; }
+    [Column(Name = "group_footer")] public string Footer { get; set; }
 
+    [Column(Name = "group_id")]
+    [PrimaryKey]
+    [Identity]
     public string Id { get; set; }
 
     public bool Equals(GroupData other)
@@ -48,6 +50,14 @@ namespace WebAddressbookTests
     {
       // return 0; if we don't want hash code equal optimisation.
       return Name.GetHashCode();
+    }
+
+    public static List<GroupData> GetAll()
+    {
+      using (var db = new AddressbookDb())
+      {
+        return (from g in db.Groups select g).ToList();
+      }
     }
 
     public override string ToString()

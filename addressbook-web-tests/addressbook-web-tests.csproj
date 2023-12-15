@@ -51,6 +51,7 @@
         <Compile Include="appmanager\LoginHelper.cs"/>
         <Compile Include="appmanager\NavigationHelper.cs"/>
         <Compile Include="model\AccountData.cs"/>
+        <Compile Include="model\AddressbookDb.cs"/>
         <Compile Include="model\ContactData.cs"/>
         <Compile Include="model\GroupData.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
@@ -66,6 +67,9 @@
         <Compile Include="tests\TestBase.cs"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="linq2db.MySql">
+            <Version>5.3.2</Version>
+        </PackageReference>
         <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001"/>
         <PackageReference Include="MSTest.TestFramework" Version="2.1.2"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
@@ -93,6 +97,11 @@
         <Content Include="groups.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="app.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')"/>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
