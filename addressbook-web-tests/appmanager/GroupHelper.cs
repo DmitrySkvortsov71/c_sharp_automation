@@ -42,10 +42,30 @@ namespace WebAddressbookTests
 
       SelectGroup(index);
       RemoveGroup();
-
       return this;
     }
 
+    public GroupHelper Remove(GroupData group)
+    {
+      manager.Navigator.GoToGroupsPage();
+
+      SelectGroup(group);
+      RemoveGroup();
+      return this;
+    }
+
+    public GroupHelper SelectGroup(int index)
+    {
+      var groups = driver.FindElements(By.CssSelector("span.group input[type='checkbox']"));
+      groups[index].Click();
+      return this;
+    }
+
+    public GroupHelper SelectGroup(GroupData group)
+    {
+      driver.FindElement(By.CssSelector($".group input[value='{group.Id}']")).Click();
+      return this;
+    }
 
     public int GetGroupsCount()
     {
@@ -72,13 +92,6 @@ namespace WebAddressbookTests
       driver.FindElement(By.XPath("//div[@id='content']/form/input[5]")).Click();
       groupsCache = null;
 
-      return this;
-    }
-
-    public GroupHelper SelectGroup(int index)
-    {
-      var groups = driver.FindElements(By.CssSelector("span.group input[type='checkbox']"));
-      groups[index].Click();
       return this;
     }
 

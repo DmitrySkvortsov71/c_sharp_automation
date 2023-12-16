@@ -51,12 +51,23 @@ namespace WebAddressbookTests
       // return 0; if we don't want hash code equal optimisation.
       return Name.GetHashCode();
     }
-
+    
+    // BD Mapping methods
     public static List<GroupData> GetAll()
     {
       using (var db = new AddressbookDb())
       {
         return (from g in db.Groups select g).ToList();
+      }
+    }
+
+    public List<ContactData> GetContacts()
+    {
+      using (var db = new AddressbookDb())
+      {
+        return (from c in db.Contacts 
+            from gcr in db.Gcr.Where(p => p.GroupId == Id && p.ContactId == c.Id)
+            select c).Distinct().ToList();
       }
     }
 

@@ -53,6 +53,7 @@
         <Compile Include="model\AccountData.cs"/>
         <Compile Include="model\AddressbookDb.cs"/>
         <Compile Include="model\ContactData.cs"/>
+        <Compile Include="model\GroupContactRelation.cs" />
         <Compile Include="model\GroupData.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="tests\AuthTestBase.cs"/>
@@ -63,6 +64,7 @@
         <Compile Include="tests\GroupCreationTests.cs"/>
         <Compile Include="tests\GroupModificationTests.cs"/>
         <Compile Include="tests\GroupRemovalTests.cs"/>
+        <Compile Include="tests\GroupTestBase.cs"/>
         <Compile Include="tests\LoginTests.cs"/>
         <Compile Include="tests\TestBase.cs"/>
     </ItemGroup>

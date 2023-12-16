@@ -1,9 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace WebAddressbookTests
 {
   [TestFixture]
-  public class GroupRemovalTests : AuthTestBase
+  public class GroupRemovalTests : GroupTestBase
   {
     [Test]
     public void GroupRemovalTest()
@@ -12,17 +13,17 @@ namespace WebAddressbookTests
       if (app.Groups.GetGroupsCount() == 0)
         app.Groups.Create(new GroupData(""));
 
-      var oldGroups = app.Groups.GetGroupsList();
+      var oldGroups = GroupData.GetAll();
       var groupToRemove = oldGroups[0];
 
       // action
-      app.Groups.Remove(0);
+      app.Groups.Remove(oldGroups[0]);
 
       // fast verification
       Assert.AreEqual(oldGroups.Count - 1, app.Groups.GetGroupsCount());
 
       // full verification
-      var newGroups = app.Groups.GetGroupsList();
+      var newGroups = GroupData.GetAll();
       oldGroups.RemoveAt(0);
       oldGroups.Sort();
       newGroups.Sort();

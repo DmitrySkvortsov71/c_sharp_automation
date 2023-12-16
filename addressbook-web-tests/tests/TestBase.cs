@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace WebAddressbookTests
 {
   public class TestBase
   {
+    public const bool PerformLongUiCheck = true;
+
     public ApplicationManager app;
 
     [SetUp]

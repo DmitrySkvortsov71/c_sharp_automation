@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using LinqToDB.Mapping;
 
 namespace WebAddressbookTests
 {
+  [Table(Name = "addressbook")]
   public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
   {
     private string e_mail;
@@ -26,14 +28,15 @@ namespace WebAddressbookTests
     public ContactData()
     {
     }
-
-    public string FirstName
+    
+    [Column(Name = "id"), PrimaryKey] public string Id { get; set; }
+    [Column(Name = "firstname")] public string FirstName
     {
       get => first_name;
       set => first_name = value;
     }
 
-    public string LastName
+    [Column(Name = "lastname")]public string LastName
     {
       get => last_name;
       set => last_name = value;
@@ -192,5 +195,7 @@ namespace WebAddressbookTests
              $"home phone: {HomePhone} | mobile: {MobilePhone} | work phone: {WorkPhone} |" +
              $"address: {MainAddress}";
     }
+    
+    
   }
 }

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
   [TestFixture]
-  public class GroupCreationTests : AuthTestBase
+  public class GroupCreationTests : GroupTestBase
   {
     public static IEnumerable<GroupData> RandomGroupDataProvider()
     {
@@ -92,14 +92,14 @@ namespace WebAddressbookTests
     [TestCaseSource(nameof(GroupDataFromJsonFile))]
     public void GroupCreationTest(GroupData group)
     {
-      var oldGroups = app.Groups.GetGroupsList();
+      var oldGroups = GroupData.GetAll();
 
       app.Groups.Create(group);
 
       // verification
       Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupsCount());
 
-      var newGroups = app.Groups.GetGroupsList();
+      var newGroups = GroupData.GetAll();
       oldGroups.Add(group);
       oldGroups.Sort();
       newGroups.Sort();
@@ -112,6 +112,11 @@ namespace WebAddressbookTests
     {
       var newGroups = app.Groups.GetGroupsList();
       var fromDb = GroupData.GetAll();
+
+      foreach (var contact in GroupData.GetAll()[0].GetContacts())
+      {
+        System.Console.Out.WriteLine(contact);
+      }
     }
   }
 }
