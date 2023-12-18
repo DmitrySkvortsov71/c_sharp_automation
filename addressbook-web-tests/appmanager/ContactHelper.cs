@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace WebAddressbookTests
 {
@@ -201,6 +203,45 @@ namespace WebAddressbookTests
 
       var rawDetailsInformation = driver.FindElement(By.CssSelector("[id='content']")).Text;
       return !trimmed ? rawDetailsInformation : rawDetailsInformation.Replace($"\r\n", "");
+    }
+
+    public ContactHelper AddContactToGroup(ContactData contact, GroupData group)
+    {
+      manager.Navigator.OpenHomePage();
+
+      ClearGroupFilter();
+      SelectContact(contact);
+      SelectGroupToAdd(group.Name);
+      CommitAddToGroup();
+
+      WaitTillElementPresence(10, "div.msgbox");
+
+      return this;
+    }
+
+
+    public ContactHelper SelectContact(ContactData contact)
+    {
+      driver.FindElement(By.CssSelector($"input[id='{contact.Id}']")).Click();
+      return this;
+    }
+
+    public ContactHelper CommitAddToGroup()
+    {
+      driver.FindElement(By.Name("add")).Click();
+      return this;
+    }
+
+    public ContactHelper SelectGroupToAdd(string groupName)
+    {
+      new SelectElement(driver.FindElement(By.CssSelector("select[name='to_group']"))).SelectByText(groupName);
+      return this;
+    }
+
+    public ContactHelper ClearGroupFilter()
+    {
+      new SelectElement(driver.FindElement(By.CssSelector("select[name='group']"))).SelectByText("[all]");
+      return this;
     }
   }
 }

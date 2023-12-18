@@ -53,9 +53,10 @@
         <Compile Include="model\AccountData.cs"/>
         <Compile Include="model\AddressbookDb.cs"/>
         <Compile Include="model\ContactData.cs"/>
-        <Compile Include="model\GroupContactRelation.cs" />
+        <Compile Include="model\GroupContactRelation.cs"/>
         <Compile Include="model\GroupData.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="tests\AddContactToGroupTest.cs"/>
         <Compile Include="tests\AuthTestBase.cs"/>
         <Compile Include="tests\ContactCreationTests.cs"/>
         <Compile Include="tests\ContactInformationTest.cs"/>

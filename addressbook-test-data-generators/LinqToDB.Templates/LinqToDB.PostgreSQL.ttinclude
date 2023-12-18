@@ -1,16 +1,19 @@
 <#@ include file="LinqToDB.ttinclude" #>
 <#
-	LinqToDB.DataProvider.PostgreSQL.PostgreSQLTools.ResolvePostgreSQL(
-	        typeof(Npgsql.NpgsqlConnection).Assembly);
+		                                                                LinqToDB.DataProvider.PostgreSQL.PostgreSQLTools
+		                                                                        .ResolvePostgreSQL(
+		                                                                                typeof(Npgsql.NpgsqlConnection)
+		                                                                                        .Assembly);
 
-	{
-	    var beforeGenerateLinqToDBModel = BeforeGenerateLinqToDBModel;
-	    BeforeGenerateLinqToDBModel = () =>
-	    {
-            beforeGenerateLinqToDBModel();
-            SetCaseSensitiveNames();
-	    };
-	}
+		                                                                {
+		                                                                    var beforeGenerateLinqToDBModel =
+		                                                                            BeforeGenerateLinqToDBModel;
+		                                                                    BeforeGenerateLinqToDBModel = () =>
+		                                                                    {
+                                                                                beforeGenerateLinqToDBModel();
+                                                                                SetCaseSensitiveNames();
+		                                                                    };
+		                                                                }
 #>
 <#+
         var GenerateCaseSensitiveNames = false; // Defines whether to generate case sensitive or insensitive names 

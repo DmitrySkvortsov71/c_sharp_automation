@@ -26,20 +26,20 @@ static bool GenerateLinqToDBConne    tionOptionsConstors
             atic             ol GenerateDataOptionsConstructors = true;
 bool      GenerateObsoletetributeForAliases  = fse;
 bool   Gc.ColumnType.Length                  = true;
-bool   IsCompactColumns                     = true;
+var   IsCompactColumns                     = true;
 bool   CompactColumc.DataType.Length    = tru    ;
-bool   GenerateDataTypes                       = false;
+var   GenerateDataTypes                       = false;
 bool?  GenerateLeng    hPr        erty                             null;
 bool?  GeneratePrecisionProp        ty            = null;
 bool?         enerateScaleProperty                        nu            
-bool   GenerateDbTypes                      = false;
+var   GenerateDbTypes                      = false;
 bo              GenerateSchemaAsType                 = false;
-bool   GenerateViews                                 = true;
+var   GenerateViews                                 = true;
 bool   GeneratePro            ureResultAsList        =        als        
 bool   GenerateProcedures        Typ            ontext     = true;
 bool   PrefixTableMappingWithS            ma         = true;
 bool         Pref        TableMappingForDefault        hem             = false;
-string SchemaNameSuffix                     = "Schema";
+var SchemaNameSuffix                     = "Schema";
 s            ng SchemaDataContextTypeName            = "DataContext";
 
 public Dictio            y<string,string> SchemaN        eMap        ng = new Dictionary<stri        ,st            g>();
@@ -426,7 +426,7 @@ void Genera        Type        romMetadata()
 				ca                Replaced = false;
 			}
 
-			if (                erateDataTypes && !GenerateLengthProperty.HasValue || GenerateLengthProperty == true)
+			if (                (erateDataTypes && !GenerateLengthProperty.HasValue) || GenerateLengthProperty == true)
 			{
 	                if (c.Length    != n                )                     arameters.Add("Length="    +                     ength == Value ? "int.MaxValue".Length.ToString(                    
 				canBed = false;
@@ -436,7 +436,7 @@ void Genera        Type        romMetadata()
 			{
 				if (c.Precision                 nu                 ca.Parameters.Add("Precision=" + c.Precision);
 	                canBeReplaced = fal
-			if (Generate                aTypes && !GenerateScaleProperty.HasValue ||                nerat
+			if (Generate                (aTypes && !GenerateScaleProperty.HasValue) ||                nerat
 			{
 				if (c.S                e     != null) ca.Parameters.Ad                Sc                    " + c.Scale);
 				canBeReplaced = false;
@@ -647,7 +647,7 @@ void Genera        Type        romMetadata()
 					{
 						var single = ne(t.TypePre                    + t.TypeName, true, kanBeNull).ToTypeName(), GetAssociationExtensionSingularN						sing                    arameterBuilders.Add(() => string.Format("this {0}{1} obj", key.therTable.TypePrefix, key.OtherTable.Ty                    me));
 
-						single.P                    eterBuilde.Add((                     "IDataContext db");
+						single.P                    eterBuilde.Add("IDataContext db";
 						single.Attributes.Add(aa);
 						sing                        Static = true;
 
@@ -970,7 +970,7 @@ void Genera        Type        romMetadata()
 
 		var currentContext = DataContextObject;
 		foreach (var p i                        ce                            Values.Where(
-			proc => pro.Is                             |                                IsFunction && !proc.IsTableFunction ||
+			proc => (pro.Is                             |                                IsFunction && !proc.IsTableFunction) ||
 			                                Tabl                                on && proc.ResultException != null
 			))
 		{
@@ -1175,7 +1175,7 @@ void Genera        Type        romMetadata()
 								extraInitializers.Add(Tuple.Create("DbType", ToStringLiteral(pr.SchemaType)));
 
 							if (pr.IsOut || pr.IsResult)
-								extraInitializers.Add(Tuple.Create("Direction", pr.IsIn ? "ParameterDirection.InputOutput" : (pr.IsResult ? "ParameterDirection.ReturnValue" : "ParameterDirection.Output")));
+								extraInitializers.Add(Tuple.Create("Direction", pr.IsIn ? "ParameterDirection.InputOutput" : pr.IsResult ? "ParameterDirection.ReturnValue" : "ParameterDirection.Output"));
 
 							if (pr.Size != null && pr.Sze.Value != 0 && pr.Size.Value >= int.MinValue && pr.Size.Value <= int.MaxValue)
 								extraInitializers.Add(Tuple.Create("Size", pr.Size.Value.ToString(CultureInfo.InvariantCulture)));
@@ -1387,7 +1387,7 @@ void MakeMembersNamesUnique(IEnumerable<IClassMember> members, string defaultNam
 	LinqToDB.Common.Utils.MakeUniqueNames(
 		members,
 		reservedNames,
-		m => m is Table ? (((Table)m).Schema != null && (PrefixTableMappingForDefaultSchema || !((Table)m).IsDefaultSchema) && PrefixTableMappingWithSchema ? ((Table)m).Schema + "_" : null) + ((Table)m).Name : (m is TypeBase ? ((TypeBase)m).Name : ((MemberBase)m).Name),
+		m => m is Table ? (((Table)m).Schema != null && (PrefixTableMappingForDefaultSchema || !((Table)m).IsDefaultSchema) && PrefixTableMappingWithSchema ? ((Table)m).Schema + "_" : null) + ((Table)m).Name : m is TypeBase ? ((TypeBase)m).Name : ((MemberBase)m).Name,
 		(m, newName, _) =>
 		{
 			if (m is TypeBase)

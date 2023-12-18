@@ -113,10 +113,7 @@ namespace WebAddressbookTests
       var newGroups = app.Groups.GetGroupsList();
       var fromDb = GroupData.GetAll();
 
-      foreach (var contact in GroupData.GetAll()[0].GetContacts())
-      {
-        System.Console.Out.WriteLine(contact);
-      }
+      foreach (var contact in GroupData.GetAll()[0].GetContacts()) System.Console.Out.WriteLine(contact);
     }
   }
 }

@@ -24,9 +24,15 @@ namespace WebAddressbookTests
 
     [Column(Name = "group_footer")] public string Footer { get; set; }
 
+    // 0000-00-00 00:00:00 impossible to convert to DateTime directly, that's why 
+    // string type. Additionally check app.config to Allow
+    [Column(Name = "deprecated")] public string Deprecated { get; set; }
+
     [Column(Name = "group_id")]
     [PrimaryKey]
     [Identity]
+
+
     public string Id { get; set; }
 
     public bool Equals(GroupData other)
@@ -51,22 +57,26 @@ namespace WebAddressbookTests
       // return 0; if we don't want hash code equal optimisation.
       return Name.GetHashCode();
     }
-    
+
     // BD Mapping methods
     public static List<GroupData> GetAll()
     {
       using (var db = new AddressbookDb())
       {
-        return (from g in db.Groups select g).ToList();
+        return (from g in db.Groups select g)
+            .ToList();
       }
     }
 
     public List<ContactData> GetContacts()
     {
+      const string deprecatedData = "0000-00-00 00:00:00";
+
       using (var db = new AddressbookDb())
       {
-        return (from c in db.Contacts 
-            from gcr in db.Gcr.Where(p => p.GroupId == Id && p.ContactId == c.Id)
+        return (from c in db.Contacts
+            from gcr in db.Gcr.Where(p =>
+                p.GroupId == Id && p.ContactId == c.Id && c.Deprecated == deprecatedData)
             select c).Distinct().ToList();
       }
     }

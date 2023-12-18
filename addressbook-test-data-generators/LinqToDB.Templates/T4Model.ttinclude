@@ -1801,10 +1801,10 @@
             else if (Type != null)
                 sb.Append(_aliasedTypes.ContainsKey(Type)
                         ? _aliasedTypes[Type]
-                        : System.Type.Name.Substring(0,
-                                System.Type.Name.IndexOf('`') < 0
-                                        ? System.Type.Name.Length
-                                        : System.Type.Name.IndexOf('`')));
+                        : Type.Name.Substring(0,
+                                Type.Name.IndexOf('`') < 0
+                                        ? Type.Name.Length
+                                        : Type.Name.IndexOf('`')));
             else
                 sb.Append(ElementType.ToTypeName());
 

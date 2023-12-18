@@ -18,38 +18,38 @@
     }
 
     public static string BaseDataContextClass;
-    public static bool EnforceModelNullability = true;
+    public static var EnforceModelNullability = true;
     public static string GetDataOptionsMethod;
 
     public string ServerName;
     public string DatabaseName;
     public string DataContextName;
     public string BaseEntityClass;
-    public string OneToManyAssociationType = "IEnumerable<{0}>";
+    public var OneToManyAssociationType = "IEnumerable<{0}>";
 
-    public bool GenerateDatabaseInfo = true;
+    public var GenerateDatabaseInfo = true;
     public bool GenerateDatabaseName;
     public bool GenerateDatabaseNameFromTable;
-    public bool GenerateConstructors = true;
+    public var GenerateConstructors = true;
     public string DefaultConfiguration;
-    public bool GenerateAssociations = true;
-    public bool GenerateBackReferences = true;
+    public var GenerateAssociations = true;
+    public var GenerateBackReferences = true;
     public bool GenerateAssociationExtensions;
-    public bool ReplaceSimilarTables = true;
-    public bool IncludeDefaultSchema = true;
+    public var ReplaceSimilarTables = true;
+    public var IncludeDefaultSchema = true;
 
     private Class DataContextObject;
 
     public bool PluralizeClassNames;
-    public bool SingularizeClassNames = true;
-    public bool PluralizeDataContextPropertyNames = true;
+    public var SingularizeClassNames = true;
+    public var PluralizeDataContextPropertyNames = true;
     public bool SingularizeDataContextPropertyNames;
-    public bool PluralizeForeignKeyNames = true;
-    public bool SingularizeForeignKeyNames = true;
+    public var PluralizeForeignKeyNames = true;
+    public var SingularizeForeignKeyNames = true;
 
-    public bool NormalizeParameterName = true;
-    public bool NormalizeProcedureColumnName = true;
-    public bool NormalizeNames = true;
+    public var NormalizeParameterName = true;
+    public var NormalizeProcedureColumnName = true;
+    public var NormalizeNames = true;
     public bool NormalizeNamesWithoutUnderscores;
 
     private Func<string, bool, string> _toValidName;
@@ -846,8 +846,10 @@ private        public MemberBase DataContextProperty { get; privateset; }
     private    public bool IsProviderSpecific { get; set; }
     private    public bool IsDefaultSchema { get; set; }
       private  public string Description { get; set; }
-        puprivateblic string AliasPropertyName { get; set; }
-        pprivateublic string AliasTypeName { get; set; }
+        puprivateblic
+    private string AliasPropertyName { get; set; }
+        pprivateublic
+    private string AliasTypeName { get; set; }
         public privatestring TypePrefix { get; set; }
 
         public string TypeName
@@ -1000,7 +1002,7 @@ private        public MemberBase DataContextProperty { get; privateset; }
         public ModelType Type => new(ParameterType, !IsValueType(ParameterType), IsNullable);
     }
 
-    private int _counter = 0;
+    private var _counter = 0;
 
     public bool IsParameter;
     public bool IsProcedureColumn;

@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using System;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace WebAddressbookTests
 {
@@ -33,6 +35,12 @@ namespace WebAddressbookTests
       {
         return false;
       }
+    }
+
+    public void WaitTillElementPresence(int secondsToWait, string cssSelector)
+    {
+      new WebDriverWait(driver, TimeSpan.FromSeconds(secondsToWait))
+          .Until(d => d.FindElements(By.CssSelector(cssSelector)).Count > 0);
     }
   }
 }

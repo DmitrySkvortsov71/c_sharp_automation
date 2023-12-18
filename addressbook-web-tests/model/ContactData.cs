@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using LinqToDB.Mapping;
 
@@ -28,19 +30,26 @@ namespace WebAddressbookTests
     public ContactData()
     {
     }
-    
-    [Column(Name = "id"), PrimaryKey] public string Id { get; set; }
-    [Column(Name = "firstname")] public string FirstName
+
+    [Column(Name = "id")] [PrimaryKey] public string Id { get; set; }
+
+    [Column(Name = "firstname")]
+    public string FirstName
     {
       get => first_name;
       set => first_name = value;
     }
 
-    [Column(Name = "lastname")]public string LastName
+    [Column(Name = "lastname")]
+    public string LastName
     {
       get => last_name;
       set => last_name = value;
     }
+
+    // 0000-00-00 00:00:00 impossible to convert to DateTime directly, that's why 
+    // string type. Additionally check app.config charset
+    [Column(Name = "deprecated")] public string Deprecated { get; set; }
 
     public string EMail
     {
@@ -195,7 +204,23 @@ namespace WebAddressbookTests
              $"home phone: {HomePhone} | mobile: {MobilePhone} | work phone: {WorkPhone} |" +
              $"address: {MainAddress}";
     }
-    
-    
+
+    // DB Related methods
+    public static List<ContactData> GetAll()
+    {
+      const string deprecatedData = "0000-00-00 00:00:00";
+
+      using (var db = new AddressbookDb())
+      {
+        // x => x.Deprecated == deprecatedData (lambda expression))
+        return (from c in db.Contacts
+                    .Where(x => x.Deprecated == deprecatedData)
+                select c)
+            .ToList();
+      }
+    }
+
+
+    // End of DB Related methods
   }
 }
