@@ -31,8 +31,6 @@ namespace WebAddressbookTests
     {
     }
 
-    [Column(Name = "id")] [PrimaryKey] public string Id { get; set; }
-
     [Column(Name = "firstname")]
     public string FirstName
     {
@@ -50,6 +48,8 @@ namespace WebAddressbookTests
     // 0000-00-00 00:00:00 impossible to convert to DateTime directly, that's why 
     // string type. Additionally check app.config charset
     [Column(Name = "deprecated")] public string Deprecated { get; set; }
+    
+    [Column(Name = "id"), PrimaryKey, Identity] public string Id { get; set; }
 
     public string EMail
     {

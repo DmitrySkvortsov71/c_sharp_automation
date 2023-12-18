@@ -25,10 +25,20 @@ namespace WebAddressbookTests
     public ContactHelper Modify(int index, ContactData newContactData)
     {
       manager.Navigator.OpenHomePage();
-
-      if (GetContactsCount() == 0) Create(new ContactData("", "", ""));
-
+      
       InitContactModification(index);
+      FillContactForm(newContactData);
+      SubmitContactModification();
+
+      manager.Navigator.ReturnToHomePage();
+      return this;
+    }
+    
+    public ContactHelper Modify(ContactData contact, ContactData newContactData)
+    {
+      manager.Navigator.OpenHomePage();
+      
+      InitContactModification(contact);
       FillContactForm(newContactData);
       SubmitContactModification();
 
@@ -47,6 +57,17 @@ namespace WebAddressbookTests
       return this;
     }
 
+    public ContactHelper Remove(ContactData contact)
+    {
+      manager.Navigator.OpenHomePage();
+
+      SelectContact(contact);
+      SubmitContactDeletion();
+
+      manager.Navigator.OpenHomePage(true);
+      return this;
+    }
+    
     public int GetContactsCount()
     {
       manager.Navigator.OpenHomePage();
@@ -73,6 +94,12 @@ namespace WebAddressbookTests
     public ContactHelper InitContactModification(int index)
     {
       driver.FindElements(By.CssSelector("a[href^='edit.php?id=']"))[index].Click();
+      return this;
+    }
+    
+    public ContactHelper InitContactModification(ContactData contact)
+    {
+      driver.FindElement(By.CssSelector($"a[href^='edit.php?id={contact.Id}']")).Click();
       return this;
     }
 

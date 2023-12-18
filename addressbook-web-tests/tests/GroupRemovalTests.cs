@@ -17,7 +17,7 @@ namespace WebAddressbookTests
       var groupToRemove = oldGroups[0];
 
       // action
-      app.Groups.Remove(oldGroups[0]);
+      app.Groups.Remove(groupToRemove);
 
       // fast verification
       Assert.AreEqual(oldGroups.Count - 1, app.Groups.GetGroupsCount());

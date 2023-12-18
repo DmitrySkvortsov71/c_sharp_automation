@@ -11,7 +11,9 @@ namespace WebAddressbookTests
       if (app.Groups.GetGroupsCount() == 0)
         app.Groups.Create(new GroupData(""));
 
-      var oldGroups = app.Groups.GetGroupsList();
+      // var oldGroups = app.Groups.GetGroupsList();
+      var oldGroups = GroupData.GetAll();
+      
       // copy for modified group
       var groupToModify = new GroupData(oldGroups[0].Name)
       {
@@ -32,7 +34,9 @@ namespace WebAddressbookTests
       // verification
       Assert.AreEqual(oldGroups.Count, app.Groups.GetGroupsCount());
 
-      var newGroups = app.Groups.GetGroupsList();
+      // var newGroups = app.Groups.GetGroupsList();
+      var newGroups = GroupData.GetAll();
+      
       oldGroups[0].Name = newData.Name;
       oldGroups.Sort();
       newGroups.Sort();
