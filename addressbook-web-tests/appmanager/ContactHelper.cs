@@ -241,8 +241,6 @@ namespace WebAddressbookTests
       SelectGroupToAdd(group.Name);
       CommitAddToGroup();
 
-      WaitTillElementPresence(10, "div.msgbox");
-
       return this;
     }
 
@@ -256,6 +254,7 @@ namespace WebAddressbookTests
     public ContactHelper CommitAddToGroup()
     {
       driver.FindElement(By.Name("add")).Click();
+      WaitTillElementPresence(10, "div.msgbox");
       return this;
     }
 
@@ -268,6 +267,29 @@ namespace WebAddressbookTests
     public ContactHelper ClearGroupFilter()
     {
       new SelectElement(driver.FindElement(By.CssSelector("select[name='group']"))).SelectByText("[all]");
+      return this;
+    }
+
+    public void RemoveContactFromGroup(ContactData contact, GroupData group)
+    {
+      manager.Navigator.OpenHomePage();
+
+      SetGroupFilter(group);
+      SelectContact(contact);
+      CommitRemoveContactFromGroup();
+
+    }
+
+    private ContactHelper SetGroupFilter(GroupData group)
+    {
+      new SelectElement(driver.FindElement(By.CssSelector("select[name='group']"))).SelectByText(group.Name);
+      return this;
+    }
+
+    private ContactHelper CommitRemoveContactFromGroup()
+    {
+      driver.FindElement(By.CssSelector("input[name='remove']")).Click();
+      WaitTillElementPresence(10, "div.msgbox");
       return this;
     }
   }

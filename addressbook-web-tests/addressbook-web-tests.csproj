@@ -56,7 +56,7 @@
         <Compile Include="model\GroupContactRelation.cs"/>
         <Compile Include="model\GroupData.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="tests\AddContactToGroupTest.cs"/>
+        <Compile Include="tests\ContactInGroupTest.cs" />
         <Compile Include="tests\AuthTestBase.cs"/>
         <Compile Include="tests\ContactCreationTests.cs"/>
         <Compile Include="tests\ContactInformationTest.cs"/>
